@@ -61,8 +61,10 @@ endif ()
 source_group("Header Files" FILES ${headers})
 source_group("Source Files" FILES ${sources})
 
+if (WIN32)
+    set_target_properties(${PROJECTNAME} PROPERTIES DEBUG_POSTFIX "d")
+endif ()
 add_library(${PROJECTNAME} ${headers} ${sources})
-set_target_properties(${PROJECTNAME} PROPERTIES DEBUG_POSTFIX "d")
 target_link_libraries(${PROJECTNAME} ${YARP_LIBRARIES} ${OpenCV_LIBRARIES})
 
 if (USE_KinectSDK)

@@ -132,8 +132,8 @@ int main(int argc, char *argv[])
 
     ResourceFinder rf;
     rf.setVerbose(true);
-    rf.setDefaultContext("kinectServer/conf");
-    rf.setDefault("from","kinect.ini");
+    rf.setDefaultContext("kinectServer");
+    rf.setDefaultConfigFile("config.ini");
     rf.configure("EFAA_ROOT",argc,argv);
 
     KinectServer mod;

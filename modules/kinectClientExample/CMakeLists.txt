@@ -3,7 +3,7 @@
 # CopyPolicy: Released under the terms of the GNU GPL v2.0.
 
 cmake_minimum_required(VERSION 2.8.7)
-set(PROJECTNAME kinectServer)
+set(PROJECTNAME kinectClientExample)
 project(${PROJECTNAME})
 
 find_package(YARP REQUIRED)
@@ -27,7 +27,6 @@ install(TARGETS ${PROJECTNAME} DESTINATION bin)
 icubcontrib_add_uninstall_target()
 
 ########## application
-file(GLOB conf ${PROJECT_SOURCE_DIR}/app/conf/*.ini)
-yarp_install(FILES ${conf} DESTINATION ${ICUBCONTRIB_CONTEXTS_INSTALL_DIR}/${PROJECTNAME})
-
+file(GLOB scripts ${PROJECT_SOURCE_DIR}/app/scripts/*.template)
+yarp_install(FILES ${scripts} DESTINATION ${ICUBCONTRIB_APPLICATIONS_TEMPLATES_INSTALL_DIR})
 

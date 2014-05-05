@@ -243,8 +243,8 @@ int main(int argc, char *argv[])
 
     ResourceFinder rf;
     rf.setVerbose(true);
-    rf.setDefaultContext("kinectClient/conf");
-    rf.configure("EFAA_ROOT",argc,argv);
+    rf.setDefaultContext("kinectClient");
+    rf.configure(argc,argv);
 
     KinectClient mod;
 

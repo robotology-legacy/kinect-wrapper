@@ -7,37 +7,37 @@
         </dependencies>
 
         <module>
-            <name>kinectClient</name>
+            <name>kinectClientExample</name>
             <parameters>--showImages false</parameters>
-            <node>pwrNode1</node>
+            <node>console</node>
             <tag>kinectClientTag</tag>
         </module>
 		
         <module>
             <name>yarpview</name>
             <parameters>--name /depth</parameters>
-            <node>pwrNode1</node>
+            <node>console</node>
             <tag>depth</tag>
         </module>
 		
         <module>
             <name>yarpview</name>
             <parameters>--name /image</parameters>
-            <node>pwrNode1</node>
+            <node>console</node>
             <tag>image</tag>
         </module>
 		
 		<module>
             <name>yarpview</name>
             <parameters>--name /skeleton</parameters>
-            <node>pwrNode1</node>
+            <node>console</node>
             <tag>skeleton</tag>
         </module>
 		
         <module>
             <name>yarpview</name>
             <parameters>--name /players</parameters>
-            <node>pwrNode1</node>
+            <node>console</node>
             <tag>players</tag>
         </module>
 		
