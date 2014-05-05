@@ -11,6 +11,6 @@ The _Kinect Wrapper_ has been designed and implemented adhering to the client-se
 To further separate the driver interfacing the Kinect device from the part of the sever dealing with YARP communication, a third abstraction layer has been considered, namely the `KinectDriver`, and located at lowest level in the wrapper hierarchy with the requirement of providing to the `KinectServer` the Kinect raw data to be marshaled and sent over the network. The `KinectDriver` is thus specialized in two implementations: the `KinectDriverSDK` and the `KinectDriverOpenNI`, respectively.
 The hierarchical structure of the wrapper can be seen in the following diagram:
 
-![Diagram of Kinect-Wrapper architecture](architecture.png)
+![Diagram of Kinect-Wrapper architecture](misc/architecture.png)
 
 In particular, the `KinectServer` is realized as a periodic thread that initially opens the Kinect device using either the `KinectDriverSDK` or the `KinectDriverOpenNI` components; then, at each run, the server reads the information as configured by the user (depth data only, user skeleton only, RGB images only or combination of them) from the driver and sends them over YARP ports. On the client side, the user relies on some simple function calls to retrieve such information.
