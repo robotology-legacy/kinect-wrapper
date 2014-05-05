@@ -1,0 +1,68 @@
+
+<application>
+<name>kinectClient</name>
+
+        <dependencies>
+            <port>/kinectServer/depth:o</port>
+        </dependencies>
+
+        <module>
+            <name>kinectClient</name>
+            <parameters>--showImages false</parameters>
+            <node>pwrNode1</node>
+            <tag>kinectClientTag</tag>
+        </module>
+		
+        <module>
+            <name>yarpview</name>
+            <parameters>--name /depth</parameters>
+            <node>pwrNode1</node>
+            <tag>depth</tag>
+        </module>
+		
+        <module>
+            <name>yarpview</name>
+            <parameters>--name /image</parameters>
+            <node>pwrNode1</node>
+            <tag>image</tag>
+        </module>
+		
+		<module>
+            <name>yarpview</name>
+            <parameters>--name /skeleton</parameters>
+            <node>pwrNode1</node>
+            <tag>skeleton</tag>
+        </module>
+		
+        <module>
+            <name>yarpview</name>
+            <parameters>--name /players</parameters>
+            <node>pwrNode1</node>
+            <tag>players</tag>
+        </module>
+		
+		<connection>
+			<from>/kinectClientExample/depthPort:o</from>
+			<to>/depth</to>
+			<protocol>udp</protocol>
+	  </connection>
+	  
+	  <connection>
+			<from>/kinectClientExample/imagePort:o</from>
+			<to>/image</to>
+			<protocol>udp</protocol>
+	  </connection>
+	  
+	  <connection>
+			<from>/kinectClientExample/playersPort:o</from>
+			<to>/players</to>
+			<protocol>udp</protocol>
+	  </connection>
+	  
+	  <connection>
+			<from>/kinectClientExample/skeletonPort:o</from>
+			<to>/skeleton</to>
+			<protocol>udp</protocol>
+	  </connection>
+
+</application>
