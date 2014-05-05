@@ -1,14 +1,12 @@
-/*
- * Copyright (C) 2012 EFAA Consortium, European Commission FP7 Project IST-270490
+/* Copyright: (C) 2014 iCub Facility - Istituto Italiano di Tecnologia
  * Authors: Ilaria Gori
  * email:   ilaria.gori@iit.it
- * website: http://efaa.upf.edu/
  * Permission is granted to copy, distribute, and/or modify this program
  * under the terms of the GNU General Public License, version 2 or any
  * later version published by the Free Software Foundation.
  *
- * A copy of the license can be found at
- * $EFAA_ROOT/license/gpl.txt
+ * A copy of the license can be found in the file LICENSE located in the
+ * root directory.
  *
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,9 +15,7 @@
  */
 
 /**
-\defgroup kinectServer pmpActionsModule
-
-@ingroup efaa_modules
+\defgroup kinectServer kinectServer
 
 This module runs the server part of the \ref kinectWrapper library.
 
@@ -29,7 +25,7 @@ from a kinect device.
 
 \section lib_sec Libraries
 - YARP libraries.
-- \ref kinect kinect library.
+- \ref kinectWrapper library.
 
 \section parameters_sec Parameters
 --verbosity \e verbosity
@@ -65,12 +61,12 @@ Windows, Linux
 #include <yarp/os/Network.h>
 #include <yarp/os/RFModule.h>
 
-#include <efaa/kinect/kinectWrapper_server.h>
+#include <kinectWrapper/kinectWrapper_server.h>
 
 using namespace std;
 using namespace yarp::os;
 using namespace yarp::sig;
-using namespace efaa::kinect;
+using namespace kinectWrapper;
 
 class KinectServer: public RFModule
 {
@@ -123,7 +119,6 @@ public:
 int main(int argc, char *argv[])
 {
     Network yarp;
-
     if (!yarp.checkNetwork())
     {
         fprintf(stdout, "Yarp network not available\n");
@@ -134,12 +129,10 @@ int main(int argc, char *argv[])
     rf.setVerbose(true);
     rf.setDefaultContext("kinectServer");
     rf.setDefaultConfigFile("config.ini");
-    rf.configure("EFAA_ROOT",argc,argv);
+    rf.configure(argc,argv);
 
     KinectServer mod;
-
     mod.runModule(rf);
-
     return 0;
 }
 

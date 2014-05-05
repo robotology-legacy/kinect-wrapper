@@ -12,57 +12,56 @@
             <node>console</node>
             <tag>kinectClientTag</tag>
         </module>
-		
+           
         <module>
             <name>yarpview</name>
             <parameters>--name /depth</parameters>
             <node>console</node>
             <tag>depth</tag>
         </module>
-		
+           
         <module>
             <name>yarpview</name>
             <parameters>--name /image</parameters>
             <node>console</node>
             <tag>image</tag>
         </module>
-		
-		<module>
+           
+           <module>
             <name>yarpview</name>
             <parameters>--name /skeleton</parameters>
             <node>console</node>
             <tag>skeleton</tag>
         </module>
-		
+           
         <module>
             <name>yarpview</name>
             <parameters>--name /players</parameters>
             <node>console</node>
             <tag>players</tag>
         </module>
-		
-		<connection>
-			<from>/kinectClientExample/depthPort:o</from>
-			<to>/depth</to>
-			<protocol>udp</protocol>
-	  </connection>
-	  
-	  <connection>
-			<from>/kinectClientExample/imagePort:o</from>
-			<to>/image</to>
-			<protocol>udp</protocol>
-	  </connection>
-	  
-	  <connection>
-			<from>/kinectClientExample/playersPort:o</from>
-			<to>/players</to>
-			<protocol>udp</protocol>
-	  </connection>
-	  
-	  <connection>
-			<from>/kinectClientExample/skeletonPort:o</from>
-			<to>/skeleton</to>
-			<protocol>udp</protocol>
-	  </connection>
-
+           
+        <connection>
+            <from>/kinectClientExample/depthPort:o</from>
+            <to>/depth</to>
+            <protocol>udp</protocol>
+        </connection>
+     
+        <connection>
+            <from>/kinectClientExample/imagePort:o</from>
+            <to>/image</to>
+            <protocol>udp</protocol>
+        </connection>
+     
+        <connection>
+            <from>/kinectClientExample/playersPort:o</from>
+            <to>/players</to>
+            <protocol>udp</protocol>
+        </connection>
+     
+        <connection>
+            <from>/kinectClientExample/skeletonPort:o</from>
+            <to>/skeleton</to>
+            <protocol>udp</protocol>
+        </connection>
 </application>

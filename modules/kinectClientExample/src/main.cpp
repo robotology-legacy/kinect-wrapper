@@ -1,14 +1,12 @@
-/*
- * Copyright (C) 2012 EFAA Consortium, European Commission FP7 Project IST-270490
+/* Copyright: (C) 2014 iCub Facility - Istituto Italiano di Tecnologia
  * Authors: Ilaria Gori
  * email:   ilaria.gori@iit.it
- * website: http://efaa.upf.edu/
  * Permission is granted to copy, distribute, and/or modify this program
  * under the terms of the GNU General Public License, version 2 or any
  * later version published by the Free Software Foundation.
  *
- * A copy of the license can be found at
- * $EFAA_ROOT/license/gpl.txt
+ * A copy of the license can be found in the file LICENSE located in the
+ * root directory.
  *
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,11 +15,10 @@
  */
 
 /**
-\defgroup kinectClient kinectClient
+\defgroup kinectClientExample kinectClientExample
 
-@ingroup efaa_modules
-
-Example module for the use of \ref kinectClient "Kinect Wrapper Client".
+Example module for the use of \ref kinectClientExample "Kinect 
+Wrapper Client". 
 
 \section intro_sec Description
 This simple module retrieves and display depth and rgb images, players information and the skeleton
@@ -31,7 +28,7 @@ It requires the \ref kinectServer running.
 
 \section lib_sec Libraries
 - YARP libraries.
-- \ref kinect "KinectWrapper" library.
+- \ref kinectWrapper library.
 
 \section parameters_sec Parameters
 --verbosity \e verbosity
@@ -55,12 +52,13 @@ Windows, Linux
 #include <yarp/os/Network.h>
 #include <yarp/os/RFModule.h>
 
-#include <efaa/kinect/kinectWrapper_client.h>
+#include <kinectWrapper/kinectTags.h>
+#include <kinectWrapper/kinectWrapper_client.h>
 
 using namespace std;
 using namespace yarp::os;
 using namespace yarp::sig;
-using namespace efaa::kinect;
+using namespace kinectWrapper;
 
 class KinectClient: public RFModule
 {
@@ -89,20 +87,19 @@ public:
     bool configure(ResourceFinder &rf)
     {
         int verbosity=rf.check("verbosity",Value(0)).asInt();
-        string name=rf.check("name",Value("kinectClient")).asString().c_str();
+        string name=rf.check("name",Value("kinectClientExample")).asString().c_str();
         string show=rf.check("showImages",Value("false")).asString().c_str();
+        showImages=(show=="true");
         
-        showImages=(show=="true")?true:false;
-        
-        depthPort.open("/kinectClientExample/depthPort:o");
-        imagePort.open("/kinectClientExample/imagePort:o");
-        playersPort.open("/kinectClientExample/playersPort:o");
-        skeletonPort.open("/kinectClientExample/skeletonPort:o");
+        depthPort.open("/"+name+"/depthPort:o");
+        imagePort.open("/"+name+"/imagePort:o");
+        playersPort.open("/"+name+"/playersPort:o");
+        skeletonPort.open("/"+name+"/skeletonPort:o");
 
         Property options;
         options.put("carrier","udp");
         options.put("remote","kinectServer");
-        options.put("local",name.c_str());
+        options.put("local",(name+"/client").c_str());
         options.put("verbosity",verbosity);
 
         if (!client.open(options))
@@ -155,11 +152,6 @@ public:
         return true;
     }
 
-    bool respond(const Bottle& cmd, Bottle& reply)
-    {
-        return true;
-    }
-
     double getPeriod()
     {
         return 0.01;
@@ -173,7 +165,7 @@ public:
         /*Alternatively you can ask for getJoints(joints), retrieving a deque of Players,
         having information on all the players instead of having only information on
         the closest one*/
-        bool tracked=client.getJoints(joint, EFAA_KINECT_CLOSEST_PLAYER);
+        bool tracked=client.getJoints(joint,KINECT_TAGS_CLOSEST_PLAYER);
 
         if (tracked)
             client.getSkeletonImage(joint,skeletonImage);
@@ -234,7 +226,6 @@ public:
 int main(int argc, char *argv[])
 {
     Network yarp;
-
     if (!yarp.checkNetwork())
     {
         fprintf(stdout, "Yarp network not available\n");
@@ -243,13 +234,11 @@ int main(int argc, char *argv[])
 
     ResourceFinder rf;
     rf.setVerbose(true);
-    rf.setDefaultContext("kinectClient");
+    rf.setDefaultContext("kinectClientExample");
     rf.configure(argc,argv);
 
     KinectClient mod;
-
     mod.runModule(rf);
-
     return 0;
 }
 
