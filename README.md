@@ -6,8 +6,8 @@ A C++ [YARP](https://github.com/robotology/yarp) library that wraps around Kinec
 ## Installation
 
 ##### Dependencies
-- YARP
-- ICUBcontrib package
+- [YARP](https://github.com/robotology/yarp)
+- [icub-contrib-common](https://github.com/robotology/icub-contrib-common) package
 - Kinect SDK and/or OpenNI
 
 ##### Cmaking the project
