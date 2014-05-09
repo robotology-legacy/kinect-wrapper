@@ -2,20 +2,34 @@
 # Authors: Ilaria Gori
 # CopyPolicy: Released under the terms of the GNU GPL v2.0.
 
+MACRO(CMAKE_DEPENDENT_OPTION option doc default depends force)
+  IF(${option}_ISSET MATCHES "^${option}_ISSET$")
+    SET(${option}_AVAILABLE 1)
+    FOREACH(d ${depends})
+      STRING(REGEX REPLACE " +" ";" CMAKE_DEPENDENT_OPTION_DEP "${d}")
+      IF(${CMAKE_DEPENDENT_OPTION_DEP})
+      ELSE(${CMAKE_DEPENDENT_OPTION_DEP})
+        SET(${option}_AVAILABLE 0)
+      ENDIF(${CMAKE_DEPENDENT_OPTION_DEP})
+    ENDFOREACH(d)
+    IF(${option}_AVAILABLE)
+      OPTION(${option} "${doc}" "${default}")
+      SET(${option} "${${option}}" CACHE BOOL "${doc}" FORCE)
+    ELSE(${option}_AVAILABLE)
+      IF(${option} MATCHES "^${option}$")
+      ELSE(${option} MATCHES "^${option}$")
+        SET(${option} "${${option}}" CACHE INTERNAL "${doc}")
+      ENDIF(${option} MATCHES "^${option}$")
+      SET(${option} ${force})
+    ENDIF(${option}_AVAILABLE)
+  ELSE(${option}_ISSET MATCHES "^${option}_ISSET$")
+    SET(${option} "${${option}_ISSET}")
+  ENDIF(${option}_ISSET MATCHES "^${option}_ISSET$")
+ENDMACRO(CMAKE_DEPENDENT_OPTION)
+
 cmake_minimum_required(VERSION 2.8.7)
 set(PROJECTNAME kinectWrapper)
 project(${PROJECTNAME})
-
-find_package(YARP REQUIRED)
-find_package(ICUBcontrib REQUIRED)
-list(APPEND CMAKE_MODULE_PATH ${YARP_MODULE_PATH}
-                              ${ICUBCONTRIB_MODULE_PATH})
-
-find_package(OpenCV REQUIRED)
-
-include(ICUBcontribHelpers)
-include(ICUBcontribOptions)
-icubcontrib_set_default_prefix()
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 find_package(KinectSDK)
@@ -25,7 +39,7 @@ if (NOT KinectSDK_FOUND AND NOT OpenNI_FOUND)
    message(FATAL_ERROR "At least one between KinectSDK and OpenNI packages must be available!")
 endif ()
 
-cmake_dependent_option(USE_KinectSDK "Use KinectSDK" ON "KinectSDK_FOUND;NOT OpenNI_FOUND" OFF)
+CMAKE_DEPENDENT_OPTION(USE_KinectSDK "Use KinectSDK" ON "KinectSDK_FOUND;NOT OpenNI_FOUND" OFF)
 if (USE_KinectSDK AND NOT KinectSDK_FOUND)
    message(STATUS "you want to use KinectSDK but it is not available on your system; we switch to OpenNI.")
    set(USE_KinectSDK OFF)
@@ -42,6 +56,7 @@ set(sources src/kinectWrapper_client.cpp)
 
 if (USE_KinectSDK)
    include_directories(${KinectSDK_INCLUDE_DIRS})
+   LINK_DIRECTORIES(${KinectSDK_LIB_DIR})
    add_definitions(-D__USE_SDK__)
    list(APPEND headers include/kinectWrapper/kinectDriver.h
                        include/kinectWrapper/kinectDriverSDK.h
@@ -61,10 +76,12 @@ endif ()
 source_group("Header Files" FILES ${headers})
 source_group("Source Files" FILES ${sources})
 
+add_library(${PROJECTNAME} ${headers} ${sources})
+
 if (WIN32)
     set_target_properties(${PROJECTNAME} PROPERTIES DEBUG_POSTFIX "d")
 endif ()
-add_library(${PROJECTNAME} ${headers} ${sources})
+
 target_link_libraries(${PROJECTNAME} ${YARP_LIBRARIES} ${OpenCV_LIBRARIES})
 
 if (USE_KinectSDK)
@@ -83,6 +100,7 @@ else ()
                                               FILES ${headers})
 endif ()
 
-icubcontrib_finalize_export(${PROJECTNAME})
-icubcontrib_add_uninstall_target()
+#icubcontrib_finalize_export(${PROJECTNAME})
+#icubcontrib_add_uninstall_target()
+
 

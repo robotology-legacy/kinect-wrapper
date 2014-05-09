@@ -30,6 +30,7 @@
 
 #include <yarp/os/Property.h>
 #include <yarp/sig/Vector.h>
+#include <yarp/sig/Image.h>
 #include <cv.h>
 #include <highgui.h>
 #include <cxcore.h>

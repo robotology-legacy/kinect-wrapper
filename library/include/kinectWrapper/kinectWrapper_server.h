@@ -17,7 +17,11 @@
 #ifndef __KINECTWRAPPER_SERVER_H__
 #define __KINECTWRAPPER_SERVER_H__
 
+#include <cv.h>
+#include <highgui.h>
+#include <cxcore.h>
 #include <yarp/os/Semaphore.h>
+#include <yarp/os/RateThread.h>
 #include <kinectWrapper/kinectWrapper.h>
 
 #ifdef __USE_SDK__

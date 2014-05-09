@@ -33,6 +33,7 @@
 
 #include <string>
 #include <deque>
+#include <map>
 #include <yarp/os/BufferedPort.h>
 #include <yarp/sig/Vector.h>
 #include <yarp/sig/Matrix.h>

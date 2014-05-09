@@ -16,8 +16,9 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <iterator>
 #include <yarp/os/Network.h>
-#include kinectWrapper/kinectWrapper_client.h>
+#include <kinectWrapper/kinectWrapper_client.h>
 
 using namespace std;
 using namespace yarp::os;
