@@ -2,7 +2,6 @@
 # Authors: Ilaria Gori
 # CopyPolicy: Released under the terms of the GNU GPL v2.0.
 
-cmake_minimum_required(VERSION 2.8.7)
 set(PROJECTNAME kinectServer)
 project(${PROJECTNAME})
 
@@ -15,10 +14,8 @@ include_directories(${YARP_INCLUDE_DIRS} ${kinectWrapper_INCLUDE_DIRS})
 add_executable(${PROJECTNAME} ${sources})
 target_link_libraries(${PROJECTNAME} ${YARP_LIBRARIES} kinectWrapper)
 install(TARGETS ${PROJECTNAME} DESTINATION bin)
-#icubcontrib_add_uninstall_target()
 
 ########## application
 file(GLOB conf ${PROJECT_SOURCE_DIR}/app/conf/*.ini)
 yarp_install(FILES ${conf} DESTINATION ${ICUBCONTRIB_CONTEXTS_INSTALL_DIR}/${PROJECTNAME})
-
 

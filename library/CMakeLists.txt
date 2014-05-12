@@ -2,32 +2,8 @@
 # Authors: Ilaria Gori
 # CopyPolicy: Released under the terms of the GNU GPL v2.0.
 
-MACRO(CMAKE_DEPENDENT_OPTION option doc default depends force)
-  IF(${option}_ISSET MATCHES "^${option}_ISSET$")
-    SET(${option}_AVAILABLE 1)
-    FOREACH(d ${depends})
-      STRING(REGEX REPLACE " +" ";" CMAKE_DEPENDENT_OPTION_DEP "${d}")
-      IF(${CMAKE_DEPENDENT_OPTION_DEP})
-      ELSE(${CMAKE_DEPENDENT_OPTION_DEP})
-        SET(${option}_AVAILABLE 0)
-      ENDIF(${CMAKE_DEPENDENT_OPTION_DEP})
-    ENDFOREACH(d)
-    IF(${option}_AVAILABLE)
-      OPTION(${option} "${doc}" "${default}")
-      SET(${option} "${${option}}" CACHE BOOL "${doc}" FORCE)
-    ELSE(${option}_AVAILABLE)
-      IF(${option} MATCHES "^${option}$")
-      ELSE(${option} MATCHES "^${option}$")
-        SET(${option} "${${option}}" CACHE INTERNAL "${doc}")
-      ENDIF(${option} MATCHES "^${option}$")
-      SET(${option} ${force})
-    ENDIF(${option}_AVAILABLE)
-  ELSE(${option}_ISSET MATCHES "^${option}_ISSET$")
-    SET(${option} "${${option}_ISSET}")
-  ENDIF(${option}_ISSET MATCHES "^${option}_ISSET$")
-ENDMACRO(CMAKE_DEPENDENT_OPTION)
+include(CMakeDependentOption)
 
-cmake_minimum_required(VERSION 2.8.7)
 set(PROJECTNAME kinectWrapper)
 project(${PROJECTNAME})
 
@@ -39,7 +15,7 @@ if (NOT KinectSDK_FOUND AND NOT OpenNI_FOUND)
    message(FATAL_ERROR "At least one between KinectSDK and OpenNI packages must be available!")
 endif ()
 
-CMAKE_DEPENDENT_OPTION(USE_KinectSDK "Use KinectSDK" ON "KinectSDK_FOUND;NOT OpenNI_FOUND" OFF)
+cmake_dependent_option(USE_KinectSDK "Use KinectSDK" ON "KinectSDK_FOUND;NOT OpenNI_FOUND" OFF)
 if (USE_KinectSDK AND NOT KinectSDK_FOUND)
    message(STATUS "you want to use KinectSDK but it is not available on your system; we switch to OpenNI.")
    set(USE_KinectSDK OFF)
@@ -99,8 +75,4 @@ else ()
                                               DEPENDS ${YARP_LIBRARIES} ${OpenCV_LIBRARIES} ${OpenNI_LIBRARIES}
                                               FILES ${headers})
 endif ()
-
-#icubcontrib_finalize_export(${PROJECTNAME})
-#icubcontrib_add_uninstall_target()
-
 
