@@ -30,4 +30,4 @@ In particular, the `KinectServer` is realized as a periodic thread that initiall
 
 ## License
 
-Material included here is Copyright of Istituto Italiano di Tecnologia and EFAA Consortium. kinectWrapper is released under the terms of the GPL v2.0 or later. See the file LICENSE for details.
+Material included here is Copyright of _Istituto Italiano di Tecnologia_ and _EFAA Consortium_. kinectWrapper is released under the terms of the GPL v2.0 or later. See the file LICENSE for details.
