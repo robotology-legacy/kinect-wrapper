@@ -37,7 +37,7 @@ class KinectDriverSDK: public KinectDriver
     IplImage* g;
     IplImage* b;
 
-    //USHORT* buf;
+    USHORT* buf;
     HANDLE h1,h2,h3,h4;
 
     bool seatedMode;

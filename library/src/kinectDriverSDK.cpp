@@ -35,7 +35,7 @@ bool KinectDriverSDK::initialize(Property &opt)
     this->def_image_width=640;
     this->def_image_height=480;
 
-    //buf=new USHORT[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
+    buf=new USHORT[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
 
     color=cvCreateImageHeader(cvSize(def_image_width,def_image_height),IPL_DEPTH_8U,4);
     depthTmp=cvCreateImageHeader(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_16U,1);
@@ -114,7 +114,7 @@ bool KinectDriverSDK::close()
 
     NuiShutdown();
 
-    //delete[] buf;
+    delete[] buf;
 
     return true;
 }
@@ -145,10 +145,10 @@ int KinectDriverSDK::setDepthImg(HANDLE h,IplImage* depth, const NUI_IMAGE_FRAME
     {
         USHORT * pBuff = (USHORT*) LockedRect.pBits;
 
-        /*for(int i=0;i<KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT;i++)
-            buf[i]=pBuff[i];*/
+        for(int i=0;i<KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT;i++)
+            buf[i]=pBuff[i];
 
-        cvSetData(depth,pBuff,KINECT_TAGS_DEPTH_WIDTH*2);
+        cvSetData(depth,buf,KINECT_TAGS_DEPTH_WIDTH*2);
     }
     return 0;
 }
