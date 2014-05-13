@@ -38,7 +38,8 @@ KinectWrapperServer::KinectWrapperServer() : RateThread(20)
 /************************************************************************/
 KinectWrapperServer::~KinectWrapperServer()
 {
-    close();
+    if (opening)
+        close();
 }
 
 /************************************************************************/
@@ -190,8 +191,6 @@ void KinectWrapperServer::threadRelease()
     rpc.interrupt();
     rpc.close();
 
-    opening=false;
-
     cvReleaseImageHeader(&depthCV);
     cvReleaseImageHeader(&depthCVPl);
     cvReleaseImageHeader(&depthFCV);
@@ -201,7 +200,8 @@ void KinectWrapperServer::threadRelease()
     cvReleaseImage(&depthTmp);
     cvReleaseImage(&depthToShow);
 
-    driver.close();
+	if (opening)
+    	driver.close();
 
     delete[] buf;
     delete[] bufPl;
@@ -216,6 +216,9 @@ void KinectWrapperServer::close()
     {
         if (isRunning())
             stop();
+
+        driver.close();
+        opening=false;
     }
     else
         printMessage(3,"server is already closed\n");
