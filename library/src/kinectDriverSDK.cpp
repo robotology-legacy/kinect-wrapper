@@ -35,6 +35,8 @@ bool KinectDriverSDK::initialize(Property &opt)
     this->def_image_width=640;
     this->def_image_height=480;
 
+    buf=new USHORT[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
+
     color=cvCreateImageHeader(cvSize(def_image_width,def_image_height),IPL_DEPTH_8U,4);
     depthTmp=cvCreateImageHeader(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_16U,1);
     rgb_big=cvCreateImage(cvSize(def_image_width,def_image_height),IPL_DEPTH_8U,3);
@@ -111,6 +113,8 @@ bool KinectDriverSDK::close()
     cvDestroyAllWindows();
 
     NuiShutdown();
+
+    delete[] buf;
 
     return true;
 }

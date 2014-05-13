@@ -18,6 +18,7 @@
 #define __KINECT_DRIVER_SDK_H__
 
 #include <windows.h>
+#include <stdio.h>
 #include <ole2.h>
 #include "NuiApi.h"
 #include "NuiImageCamera.h"
@@ -37,7 +38,7 @@ class KinectDriverSDK: public KinectDriver
     IplImage* g;
     IplImage* b;
 
-    USHORT buf[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
+    USHORT* buf;//[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
 
     HANDLE h1,h2,h3,h4;
 

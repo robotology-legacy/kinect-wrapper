@@ -116,6 +116,11 @@ bool KinectWrapperServer::open(const Property &options)
     img_width=opt.check("img_width",Value(320)).asInt();
     img_height=opt.check("img_height",Value(240)).asInt();
 
+    buf=new unsigned short[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
+    bufPl=new unsigned short[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
+    bufF=new float[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
+    bufFPl=new float[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
+
     if (!driver.initialize(opt))
     {
         fprintf(stdout, "Kinect failed to initialize\n");
@@ -164,6 +169,45 @@ bool KinectWrapperServer::open(const Property &options)
     return opening=true;
 }
 
+/************************************************************************/
+void KinectWrapperServer::threadRelease()
+{
+    if (info==KINECT_TAGS_ALL_INFO || info==KINECT_TAGS_DEPTH_RGB || info==KINECT_TAGS_DEPTH_RGB_PLAYERS)
+    {
+        imagePort.interrupt();
+        imagePort.close();
+    }
+
+    if (info==KINECT_TAGS_ALL_INFO || info==KINECT_TAGS_DEPTH_JOINTS)
+    {
+        jointsPort.interrupt();
+        jointsPort.close();
+    }
+
+    depthPort.interrupt();
+    depthPort.close();
+
+    rpc.interrupt();
+    rpc.close();
+
+    opening=false;
+
+    cvReleaseImageHeader(&depthCV);
+    cvReleaseImageHeader(&depthCVPl);
+    cvReleaseImageHeader(&depthFCV);
+    cvReleaseImageHeader(&depthFCVPl);
+    cvReleaseImage(&playersImage);
+    cvReleaseImage(&skeletonImage);
+    cvReleaseImage(&depthTmp);
+    cvReleaseImage(&depthToShow);
+
+    driver.close();
+
+    delete[] buf;
+    delete[] bufPl;
+    delete[] bufF;
+    delete[] bufFPl;
+}
 
 /************************************************************************/
 void KinectWrapperServer::close()
@@ -172,37 +216,6 @@ void KinectWrapperServer::close()
     {
         if (isRunning())
             stop();
-
-        if (info==KINECT_TAGS_ALL_INFO || info==KINECT_TAGS_DEPTH_RGB || info==KINECT_TAGS_DEPTH_RGB_PLAYERS)
-        {
-            imagePort.interrupt();
-            imagePort.close();
-        }
-
-        if (info==KINECT_TAGS_ALL_INFO || info==KINECT_TAGS_DEPTH_JOINTS)
-        {
-            jointsPort.interrupt();
-            jointsPort.close();
-        }
-
-        depthPort.interrupt();
-        depthPort.close();
-
-        opening=false;
-
-        cvReleaseImageHeader(&depthCV);
-        cvReleaseImageHeader(&depthCVPl);
-        cvReleaseImageHeader(&depthFCV);
-        cvReleaseImageHeader(&depthFCVPl);
-        cvReleaseImage(&playersImage);
-        cvReleaseImage(&skeletonImage);
-        cvReleaseImage(&depthTmp);
-        cvReleaseImage(&depthToShow);
-
-        rpc.interrupt();
-        rpc.close();
-
-        printMessage(1,"server closed\n");
     }
     else
         printMessage(3,"server is already closed\n");
@@ -810,7 +823,6 @@ void KinectWrapperServer::getDepthImage(const yarp::sig::ImageOf<yarp::sig::Pixe
 bool KinectWrapperServer::get3DPoint(int u, int v, yarp::sig::Vector &point3D)
 {
     driver.get3DPoint(u,v,point3D);
-
     return true;
 }
 

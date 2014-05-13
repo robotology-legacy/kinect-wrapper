@@ -39,10 +39,10 @@ class KinectWrapperServer : public KinectWrapper,
                   public yarp::os::PortReader
 {
 protected:
-    unsigned short buf[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
-    unsigned short bufPl[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
-    float bufF[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
-    float bufFPl[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
+    unsigned short* buf;//[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
+    unsigned short* bufPl;//[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
+    float* bufF;//[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
+    float* bufFPl;//[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
     bool opening;
     bool seatedMode;
     bool useSDK;
@@ -96,6 +96,7 @@ protected:
     Player getJoints(int playerId);
     Player managePlayerRequest(int playerId);
     void drawLimb(Skeleton &jointsMap, const std::string &point1, const std::string &point2);
+    void threadRelease();
 
 public:
     KinectWrapperServer();
