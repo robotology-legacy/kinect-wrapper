@@ -39,10 +39,10 @@ class KinectWrapperServer : public KinectWrapper,
                   public yarp::os::PortReader
 {
 protected:
-    unsigned short* buf;//[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
-    unsigned short* bufPl;//[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
-    float* bufF;//[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
-    float* bufFPl;//[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
+    unsigned short* buf;
+    unsigned short* bufPl;
+    float* bufF;
+    float* bufFPl;
     bool opening;
     bool seatedMode;
     bool useSDK;
