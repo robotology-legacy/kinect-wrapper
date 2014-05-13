@@ -21,6 +21,7 @@
 #include <highgui.h>
 #include <cxcore.h>
 #include <yarp/os/Semaphore.h>
+#include <yarp/os/Stamp.h>
 #include <yarp/os/RateThread.h>
 #include <kinectWrapper/kinectWrapper.h>
 
@@ -50,11 +51,8 @@ protected:
     int verbosity;
     int img_width;
     int img_height;
-    int tsD;
-    int tsI;
-    double timestampD;
-    double timestampI;
-    double timestampS;
+    yarp::os::Stamp tsD,tsI,tsS;
+    double timestampD,timestampI,timestampS;
     std::string name;
     std::string info;
 

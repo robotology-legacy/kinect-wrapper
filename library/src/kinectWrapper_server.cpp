@@ -244,33 +244,30 @@ void KinectWrapperServer::run()
         {
             mutexDepth.wait();
             depthPort.prepare()=depth;
-            Bottle tsD;
-            tsD.addDouble(timestampD);
-            mutexDepth.post();
+            tsD.update(timestampD);
             depthPort.setEnvelope(tsD);
             depthPort.write();
+            mutexDepth.post();
         }
 
         if (imagePort.getOutputCount()>0 && ready)
         {
             mutexRgb.wait();
             imagePort.prepare()=image;
-            Bottle tsI;
-            tsI.addDouble(timestampI);
-            mutexRgb.post();
+            tsI.update(timestampI);
             imagePort.setEnvelope(tsI);
             imagePort.write();
+            mutexRgb.post();
         }
 
         if (jointsPort.getOutputCount()>0 && ready)
         {
             mutexSkeleton.wait();
             jointsPort.prepare()=skeleton;
-            Bottle tsS;
-            tsS.addDouble(timestampS);
-            mutexSkeleton.post();
+            tsS.update(timestampS);
             jointsPort.setEnvelope(tsS);
             jointsPort.write();
+            mutexSkeleton.post();
         }
     }
     else if (info==KINECT_TAGS_DEPTH_RGB || info==KINECT_TAGS_DEPTH_RGB_PLAYERS)
@@ -287,22 +284,20 @@ void KinectWrapperServer::run()
         {
             mutexDepth.wait();
             depthPort.prepare()=depth;
-            Bottle tsD;
-            tsD.addDouble(timestampD);
-            mutexDepth.post();
+            tsD.update(timestampD);
             depthPort.setEnvelope(tsD);
             depthPort.write();
+            mutexDepth.post();
         }
 
         if (imagePort.getOutputCount()>0 && ready)
         {
             mutexRgb.wait();
             imagePort.prepare()=image;
-            Bottle tsI;
-            tsI.addDouble(timestampI);
-            mutexRgb.post();
+            tsI.update(timestampI);
             imagePort.setEnvelope(tsI);
             imagePort.write();
+            mutexRgb.post();
         }
     }
     else if (info==KINECT_TAGS_DEPTH_JOINTS)
@@ -320,22 +315,20 @@ void KinectWrapperServer::run()
         {
             mutexDepth.wait();
             depthPort.prepare()=depth;
-            Bottle tsD;
-            tsD.addDouble(timestampD);
-            mutexDepth.post();
+            tsD.update(timestampD);
             depthPort.setEnvelope(tsD);
             depthPort.write();
+            mutexDepth.post();
         }
 
         if (jointsPort.getOutputCount()>0 && ready)
         {
             mutexSkeleton.wait();
             jointsPort.prepare()=skeleton;
-            Bottle tsS;
-            tsS.addDouble(timestampS);
-            mutexSkeleton.post();
+            tsS.update(timestampS);
             jointsPort.setEnvelope(tsS);
             jointsPort.write();
+            mutexSkeleton.post();
         }
     }
     else if (info==KINECT_TAGS_DEPTH || info==KINECT_TAGS_DEPTH_PLAYERS)
@@ -348,11 +341,10 @@ void KinectWrapperServer::run()
         {
             mutexDepth.wait();
             depthPort.prepare()=depth;
-            Bottle tsD;
-            tsD.addDouble(timestampD);
-            mutexDepth.post();
+            tsD.update(timestampD);
             depthPort.setEnvelope(tsD);
             depthPort.write();
+            mutexDepth.post();
         }
     }
 }
