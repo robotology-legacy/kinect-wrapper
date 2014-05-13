@@ -234,7 +234,7 @@ bool KinectDriverSDK::readSkeleton(Bottle *skeleton, double &timestamp)
                     if (isJointProvided(j))
                     {
                         Bottle &joints=player.addList();
-                        joints.addString(jointNameAss(j).c_str());
+                        joints.addString(jointNameAssociation(j).c_str());
                         Bottle &joint=joints.addList();
                         float fx,fy;
                         NuiTransformSkeletonToDepthImage(SkeletonFrame.SkeletonData[i].SkeletonPositions[j],&fx,&fy,NUI_IMAGE_RESOLUTION_320x240);
@@ -276,7 +276,7 @@ bool KinectDriverSDK::readSkeleton(Bottle *skeleton, double &timestamp)
 }
 
 /************************************************************************/
-string KinectDriverSDK::jointNameAss(int id)
+string KinectDriverSDK::jointNameAssociation(int id)
 {
     string jointName;
     switch (id)

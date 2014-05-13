@@ -63,7 +63,7 @@ private:
 
     bool testRetVal(XnStatus nRetVal, std::string message);
     void resizeImage(IplImage* depthTmp, IplImage* depthImage);
-    std::string jointNameAss(XnSkeletonJoint joint);
+    std::string jointNameAssociation(XnSkeletonJoint joint);
 
 public:
     bool initialize(yarp::os::Property &opt);

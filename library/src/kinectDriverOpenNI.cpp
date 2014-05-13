@@ -280,7 +280,7 @@ bool KinectDriverOpenNI::readSkeleton(Bottle *skeleton, double &timestamp)
                 for (int j=0; j<nJoints; j++)
                 {
                     XnSkeletonJoint eJoint = pJoints[j];
-                    std::string jName = jointNameAss(eJoint);
+                    std::string jName = jointNameAssociation(eJoint);
                     XnSkeletonJointPosition joint;
                     userGenerator.GetSkeletonCap().GetSkeletonJointPosition(aUsers[i],eJoint,joint);
                     if (joint.fConfidence > 0.5)
@@ -383,7 +383,7 @@ void KinectDriverOpenNI::update()
 }
 
 /************************************************************************/
-string KinectDriverOpenNI::jointNameAss(XnSkeletonJoint joint)
+string KinectDriverOpenNI::jointNameAssociation(XnSkeletonJoint joint)
 {
     string jointName;
     switch (joint)

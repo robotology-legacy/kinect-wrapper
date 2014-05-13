@@ -53,7 +53,7 @@ private:
     int setColorImg(HANDLE h,IplImage* color,const NUI_IMAGE_FRAME * pImageFrame);
     int setDepthImg(HANDLE h,IplImage* depth, const NUI_IMAGE_FRAME * pImageFrame );
     const NUI_IMAGE_FRAME * retrieveImg(HANDLE h);
-    std::string jointNameAss(int id);
+    std::string jointNameAssociation(int id);
     bool isJointProvided(int id);
 
 public:
