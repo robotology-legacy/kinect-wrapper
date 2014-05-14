@@ -49,8 +49,6 @@ private:
     int def_depth_height;
     int device;
 
-    unsigned short buf[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
-
     IplImage* rgb_big;
     IplImage* depthTmp;
     IplImage* depthImage;
