@@ -23,6 +23,7 @@
 #include "NuiImageCamera.h"
 #include "NuiSensor.h"
 #include "NuiSkeleton.h"
+#include <yarp/os/Semaphore.h>
 #include <kinectWrapper/kinectDriver.h>
 
 namespace kinectWrapper
@@ -30,12 +31,7 @@ namespace kinectWrapper
 class KinectDriverSDK: public KinectDriver
 {
     IplImage* color;
-    IplImage* rgb_big;
     IplImage* depthTmp;
-    IplImage* foo;
-    IplImage* r;
-    IplImage* g;
-    IplImage* b;
 
     USHORT* buf;
     HANDLE h1,h2,h3,h4;
@@ -58,6 +54,9 @@ private:
 
 public:
 
+    KinectDriverSDK()
+    {
+    }
     bool initialize(yarp::os::Property &opt);
     bool readRgb(yarp::sig::ImageOf<yarp::sig::PixelRgb> &rgb, double &timestamp);
     bool readDepth(yarp::sig::ImageOf<yarp::sig::PixelMono16> &depth, double &timestamp);

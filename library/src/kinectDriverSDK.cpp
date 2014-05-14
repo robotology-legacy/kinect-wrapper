@@ -39,11 +39,6 @@ bool KinectDriverSDK::initialize(Property &opt)
 
     color=cvCreateImageHeader(cvSize(def_image_width,def_image_height),IPL_DEPTH_8U,4);
     depthTmp=cvCreateImageHeader(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_16U,1);
-    rgb_big=cvCreateImage(cvSize(def_image_width,def_image_height),IPL_DEPTH_8U,3);
-    foo=cvCreateImage(cvSize(def_image_width,def_image_height),IPL_DEPTH_8U,1);
-    r=cvCreateImage(cvSize(def_image_width,def_image_height),IPL_DEPTH_8U,1);
-    g=cvCreateImage(cvSize(def_image_width,def_image_height),IPL_DEPTH_8U,1);
-    b=cvCreateImage(cvSize(def_image_width,def_image_height),IPL_DEPTH_8U,1);
 
     initC=false;
     initD=false;
@@ -104,11 +99,6 @@ bool KinectDriverSDK::close()
 {
     cvReleaseImageHeader(&color);
     cvReleaseImageHeader(&depthTmp);
-    cvReleaseImage(&rgb_big);
-    cvReleaseImage(&foo);
-    cvReleaseImage(&r);
-    cvReleaseImage(&g);
-    cvReleaseImage(&b);
 
     cvDestroyAllWindows();
 
@@ -177,6 +167,11 @@ bool KinectDriverSDK::readRgb(ImageOf<PixelRgb> &rgb, double &timestamp)
 
     if (colIm!=NULL)
     {
+        IplImage* rgb_big=cvCreateImage(cvSize(def_image_width,def_image_height),IPL_DEPTH_8U,3);
+        IplImage* foo=cvCreateImage(cvSize(def_image_width,def_image_height),IPL_DEPTH_8U,1);
+        IplImage* r=cvCreateImage(cvSize(def_image_width,def_image_height),IPL_DEPTH_8U,1);
+        IplImage* g=cvCreateImage(cvSize(def_image_width,def_image_height),IPL_DEPTH_8U,1);
+        IplImage* b=cvCreateImage(cvSize(def_image_width,def_image_height),IPL_DEPTH_8U,1);
         setColorImg(h2,color,colIm);
         cvSplit(color,r,g,b,foo);
         cvMerge(b,g,r,NULL,rgb_big);
@@ -184,6 +179,11 @@ bool KinectDriverSDK::readRgb(ImageOf<PixelRgb> &rgb, double &timestamp)
         NuiImageStreamReleaseFrame(h2, colIm);
         initC=true;
         timestamp=(double)(colIm->liTimeStamp).QuadPart;
+        cvReleaseImage(&rgb_big);
+        cvReleaseImage(&foo);
+        cvReleaseImage(&r);
+        cvReleaseImage(&g);
+        cvReleaseImage(&b);
         return true;
     }
     return false;

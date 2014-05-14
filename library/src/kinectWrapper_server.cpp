@@ -122,7 +122,15 @@ bool KinectWrapperServer::open(const Property &options)
     bufF=new float[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
     bufFPl=new float[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
 
-    if (!driver.initialize(opt))
+#ifdef __USE_SDK__
+    driver=new KinectDriverSDK();
+#endif
+
+#ifdef __USE_OPENNI__
+    driver=new KinectDriverOpenNI();
+#endif
+
+    if (!driver->initialize(opt))
     {
         fprintf(stdout, "Kinect failed to initialize\n");
         return false;
@@ -201,7 +209,10 @@ void KinectWrapperServer::threadRelease()
     cvReleaseImage(&depthToShow);
 
 	if (opening)
-    	driver.close();
+    {
+    	driver->close();
+        delete driver;
+    }
 
     delete[] buf;
     delete[] bufPl;
@@ -217,7 +228,8 @@ void KinectWrapperServer::close()
         if (isRunning())
             stop();
 
-        driver.close();
+        driver->close();
+        delete driver;
         opening=false;
     }
     else
@@ -227,20 +239,20 @@ void KinectWrapperServer::close()
 /************************************************************************/
 void KinectWrapperServer::run()
 {
-    driver.update();
+    driver->update();
     if (info==KINECT_TAGS_ALL_INFO)
     {
         mutexDepth.wait();
-        bool ready=driver.readDepth(depth, timestampD);
+        bool ready=driver->readDepth(depth, timestampD);
         mutexDepth.post();
 
         mutexRgb.wait();
-        ready&=driver.readRgb(image, timestampI);
+        ready&=driver->readRgb(image, timestampI);
         mutexRgb.post();
 
         mutexSkeleton.wait();
         skeleton.clear();
-        ready&=driver.readSkeleton(&skeleton, timestampS);
+        ready&=driver->readSkeleton(&skeleton, timestampS);
         mutexSkeleton.post();
 
         if (depthPort.getOutputCount()>0 && ready)
@@ -276,11 +288,11 @@ void KinectWrapperServer::run()
     else if (info==KINECT_TAGS_DEPTH_RGB || info==KINECT_TAGS_DEPTH_RGB_PLAYERS)
     {
         mutexDepth.wait();
-        bool ready=driver.readDepth(depth, timestampD);
+        bool ready=driver->readDepth(depth, timestampD);
         mutexDepth.post();
 
         mutexRgb.wait();
-        ready&=driver.readRgb(image, timestampI);
+        ready&=driver->readRgb(image, timestampI);
         mutexRgb.post();
 
         if (depthPort.getOutputCount()>0 && ready)
@@ -306,12 +318,12 @@ void KinectWrapperServer::run()
     else if (info==KINECT_TAGS_DEPTH_JOINTS)
     {
         mutexDepth.wait();
-        bool ready=driver.readDepth(depth, timestampD);
+        bool ready=driver->readDepth(depth, timestampD);
         mutexDepth.post();
 
         mutexSkeleton.wait();
         skeleton.clear();
-        ready&=driver.readSkeleton(&skeleton, timestampS);
+        ready&=driver->readSkeleton(&skeleton, timestampS);
         mutexSkeleton.post();
 
         if (depthPort.getOutputCount()>0 && ready)
@@ -337,7 +349,7 @@ void KinectWrapperServer::run()
     else if (info==KINECT_TAGS_DEPTH || info==KINECT_TAGS_DEPTH_PLAYERS)
     {
         mutexDepth.wait();
-        bool ready=driver.readDepth(depth, timestampD);
+        bool ready=driver->readDepth(depth, timestampD);
         mutexDepth.post();
 
         if (depthPort.getOutputCount()>0 && ready)
@@ -817,7 +829,7 @@ void KinectWrapperServer::getDepthImage(const yarp::sig::ImageOf<yarp::sig::Pixe
 /************************************************************************/
 bool KinectWrapperServer::get3DPoint(int u, int v, yarp::sig::Vector &point3D)
 {
-    driver.get3DPoint(u,v,point3D);
+    driver->get3DPoint(u,v,point3D);
     return true;
 }
 

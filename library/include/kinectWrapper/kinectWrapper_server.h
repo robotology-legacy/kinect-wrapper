@@ -80,11 +80,11 @@ protected:
     IplImage* depthToShow;
 
 #ifdef __USE_SDK__
-    KinectDriverSDK driver;
+    KinectDriverSDK* driver;
 #endif
 
 #ifdef _USE_OPENNI__
-    KinectDriverOpenNI driver;
+    KinectDriverOpenNI* driver;
 #endif
 
     int   printMessage(const int level, const char *format, ...) const;
