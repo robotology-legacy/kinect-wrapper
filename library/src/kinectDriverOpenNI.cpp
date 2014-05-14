@@ -340,7 +340,7 @@ bool KinectDriverOpenNI::readSkeleton(Bottle *skeleton, double &timestamp)
             //The stop tracking procedure is quite slow; we cannot allow the tracking to send inconsistent data to the
             //OPC; if the confidence of all the joints is lower than 0.5, we assume that the tracker actually is not
             //tracking anything, so the only joint written is CoM. In this case we do not send skeleton information.
-            if((bones.get(0).asList()->get(1).asList()->get(0).asString().c_str()!=KINECT_TAGS_BODYPART_COM));
+            if((bones.get(0).asList()->get(1).asList()->get(0).asString()!=KINECT_TAGS_BODYPART_COM));
                 *skeleton=bones;
         }
         return true;

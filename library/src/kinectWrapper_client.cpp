@@ -115,7 +115,7 @@ bool KinectWrapperClient::open(const Property &options)
                 {
                     printMessage(1,"successfully connected with the server %s!\n",remote.c_str());
 
-                    info=reply.get(1).asString();
+                    info=reply.get(1).asString().c_str();
                     img_width=reply.get(2).asInt();
                     img_height=reply.get(3).asInt();
                     if (reply.get(4).asString()==KINECT_TAGS_SEATED_MODE)
