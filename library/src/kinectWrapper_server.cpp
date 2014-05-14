@@ -228,8 +228,6 @@ void KinectWrapperServer::close()
         if (isRunning())
             stop();
 
-        driver->close();
-        delete driver;
         opening=false;
     }
     else

@@ -29,7 +29,7 @@
     #include <kinectWrapper/kinectDriverSDK.h>
 #endif
 
-#ifdef _USE_OPENNI__
+#ifdef __USE_OPENNI__
     #include <kinectWrapper/kinectDriverOpenNI.h>
 #endif
 
@@ -83,7 +83,7 @@ protected:
     KinectDriverSDK* driver;
 #endif
 
-#ifdef _USE_OPENNI__
+#ifdef __USE_OPENNI__
     KinectDriverOpenNI* driver;
 #endif
 
