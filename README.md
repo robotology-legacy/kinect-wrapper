@@ -29,6 +29,10 @@ The hierarchical structure of the wrapper can be seen in the following diagram:
 
 In particular, the `KinectServer` is realized as a periodic thread that initially opens the Kinect device using either the `KinectDriverSDK` or the `KinectDriverOpenNI` components; then, at each run, the server reads the information as configured by the user from the driver (depth data only, user skeleton only, RGB images only or combination of them) and sends them over YARP ports. On the client side, the user relies on a set of simple function calls to retrieve such information.
 
+## Documentation
+
+Online documentation is available here: [http://robotology-playground.github.io/kinectWrapper](http://robotology-playground.github.io/kinectWrapper).
+
 ## License
 
 Material included here is Copyright of _Istituto Italiano di Tecnologia_ and _EFAA Consortium_. kinectWrapper is released under the terms of the GPL v2.0 or later. See the file LICENSE for details.
