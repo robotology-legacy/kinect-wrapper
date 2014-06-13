@@ -31,7 +31,7 @@ In particular, the `KinectServer` is realized as a periodic thread that initiall
 
 ## Documentation
 
-Online documentation is available here: [http://robotology-playground.github.io/kinectWrapper](http://robotology-playground.github.io/kinectWrapper).
+Online documentation is available here: [http://robotology-playground.github.io/kinectWrapper](http://robotology.github.io/kinectWrapper).
 
 ## License
 
