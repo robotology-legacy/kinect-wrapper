@@ -1,0 +1,445 @@
+\section{kinect\+Wrapper\+:\+:Kinect\+Wrapper Class Reference}
+\label{classkinectWrapper_1_1KinectWrapper}\index{kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}}
+
+
+The Definition of the \hyperlink{classkinectWrapper_1_1KinectWrapper}{Kinect\+Wrapper} Interface.  
+
+
+
+
+{\ttfamily \#include $<$kinect\+Wrapper.\+h$>$}
+
+
+
+Inherited by kinect\+Wrapper\+::\+Kinect\+Wrapper\+Client, and kinect\+Wrapper\+::\+Kinect\+Wrapper\+Server.
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual bool \hyperlink{classkinectWrapper_1_1KinectWrapper_ad3781beb01dd66d4d7946336ff72b52c}{open} (const yarp\+::os\+::\+Property \&options)=0
+\begin{DoxyCompactList}\small\item\em Configure the client or the server part of the kinect\+Wrapper. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classkinectWrapper_1_1KinectWrapper_a40285a4cca39849bd49b759ea122cd17}{is\+Open} ()=0
+\begin{DoxyCompactList}\small\item\em Tells if the wrapper is open or not. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classkinectWrapper_1_1KinectWrapper_a67d94ddca5fdcbe8786e7ccbe1f5c068}{get\+Depth} (yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Mono16 $>$ \&depth\+Im, double $\ast$timestamp)=0
+\begin{DoxyCompactList}\small\item\em Retrieve the depth image. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classkinectWrapper_1_1KinectWrapper_a728566b395772504aee383bd761db018}{get\+Depth\+And\+Players} (yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Mono16 $>$ \&depth\+Im, yarp\+::sig\+::\+Matrix \&players, double $\ast$timestamp)=0
+\begin{DoxyCompactList}\small\item\em Retrieve the depth image and a matrix containing information on players. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classkinectWrapper_1_1KinectWrapper_a6703382dcc56e189a0b90921a7e06cc3}{get\+Depth} (yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Float $>$ \&depth\+Im, double $\ast$timestamp)=0
+\begin{DoxyCompactList}\small\item\em Retrieve the depth image. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classkinectWrapper_1_1KinectWrapper_ae5f7c0f9948262149ee032470baef9bc}{get\+Depth\+And\+Players} (yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Float $>$ \&depth\+Im, yarp\+::sig\+::\+Matrix \&players, double $\ast$timestamp)=0
+\begin{DoxyCompactList}\small\item\em Retrieve the depth image and a matrix containing information on players. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classkinectWrapper_1_1KinectWrapper_a71cf13b779d853330855cb079ecba774}{get\+Players} (yarp\+::sig\+::\+Matrix \&players, double $\ast$timestamp)=0
+\begin{DoxyCompactList}\small\item\em Retrieve a matrix containing information on players. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classkinectWrapper_1_1KinectWrapper_a617ad32f3fc2aa8b16961a71dd827482}{get\+Rgb} (yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Rgb $>$ \&rgb\+Im, double $\ast$timestamp)=0
+\begin{DoxyCompactList}\small\item\em Retrieve the rgb image. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classkinectWrapper_1_1KinectWrapper_aeaacd61922891a8375f9a35768e37580}{get\+Joints} (std\+::deque$<$ \hyperlink{structkinectWrapper_1_1Player}{Player} $>$ \&joints, double $\ast$timestamp)=0
+\begin{DoxyCompactList}\small\item\em Retrieve the joints position of all the players. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classkinectWrapper_1_1KinectWrapper_ab345e17fe0dc0d042c7fdf7f17dcb963}{get\+Joints} (\hyperlink{structkinectWrapper_1_1Player}{Player} \&joints, int player, double $\ast$timestamp)=0
+\begin{DoxyCompactList}\small\item\em Retrieve the joints position of one player. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classkinectWrapper_1_1KinectWrapper_a1cb049a6f2d2138edf35da4bc77e0530}{get\+Info} (yarp\+::os\+::\+Property \&opt)=0
+\begin{DoxyCompactList}\small\item\em Retrieve some info regarding which information is retrieved from kinect, whether the driver is opened in seated mode, the width and the height of the rgb image. \end{DoxyCompactList}\item 
+virtual void \hyperlink{classkinectWrapper_1_1KinectWrapper_a9838a284ff45200ab7978bff25e3b4b3}{close} ()=0
+\begin{DoxyCompactList}\small\item\em Stop the client/server and dispose it. \end{DoxyCompactList}\item 
+virtual void \hyperlink{classkinectWrapper_1_1KinectWrapper_ad544a82270b338a2a07d66cf3883ca62}{get\+Players\+Image} (const yarp\+::sig\+::\+Matrix \&players, yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Bgr $>$ \&image)=0
+\begin{DoxyCompactList}\small\item\em Fill an image with the players that are being tracked, each player with a different color. \end{DoxyCompactList}\item 
+virtual void \hyperlink{classkinectWrapper_1_1KinectWrapper_a5ade44152da43fcae418e6baae7c713a}{get\+Skeleton\+Image} (const std\+::deque$<$ \hyperlink{structkinectWrapper_1_1Player}{Player} $>$ \&players, yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Bgr $>$ \&image)=0
+\begin{DoxyCompactList}\small\item\em Fill an image with the players skeletons. \end{DoxyCompactList}\item 
+virtual void \hyperlink{classkinectWrapper_1_1KinectWrapper_a97c51c1e4e1b2918e62aa7621d26b7dc}{get\+Skeleton\+Image} (const \hyperlink{structkinectWrapper_1_1Player}{Player} \&player, yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Bgr $>$ \&image)=0
+\begin{DoxyCompactList}\small\item\em Fill an image with the player skeleton. \end{DoxyCompactList}\item 
+virtual void \hyperlink{classkinectWrapper_1_1KinectWrapper_a51bbf5f801626d07bfe6059fd80d1a50}{get\+Depth\+Image} (const yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Mono16 $>$ \&depth, yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Float $>$ \&depth\+To\+Display)=0
+\begin{DoxyCompactList}\small\item\em Fill an image with the depth that can be displayed. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classkinectWrapper_1_1KinectWrapper_abc3df8e268fc0c8a799b1a1d061dde12}{get3\+D\+Point} (int u, int v, yarp\+::sig\+::\+Vector \&point3D)=0
+\begin{DoxyCompactList}\small\item\em Project a pixel in 3D. \end{DoxyCompactList}\item 
+virtual \hyperlink{classkinectWrapper_1_1KinectWrapper_a516e88d370169f4e3e1aa6bfed734538}{$\sim$\+Kinect\+Wrapper} ()\label{classkinectWrapper_1_1KinectWrapper_a516e88d370169f4e3e1aa6bfed734538}
+
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The Definition of the \hyperlink{classkinectWrapper_1_1KinectWrapper}{Kinect\+Wrapper} Interface. 
+
+Definition at line 79 of file kinect\+Wrapper.\+h.
+
+
+
+\subsection{Member Function Documentation}
+\index{kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}!close@{close}}
+\index{close@{close}!kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}}
+\subsubsection[{\texorpdfstring{close()=0}{close()=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual void kinect\+Wrapper\+::\+Kinect\+Wrapper\+::close (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classkinectWrapper_1_1KinectWrapper_a9838a284ff45200ab7978bff25e3b4b3}
+
+
+Stop the client/server and dispose it. 
+
+Called by destructor. \index{kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}!get3\+D\+Point@{get3\+D\+Point}}
+\index{get3\+D\+Point@{get3\+D\+Point}!kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}}
+\subsubsection[{\texorpdfstring{get3\+D\+Point(int u, int v, yarp\+::sig\+::\+Vector \&point3\+D)=0}{get3DPoint(int u, int v, yarp::sig::Vector &point3D)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool kinect\+Wrapper\+::\+Kinect\+Wrapper\+::get3\+D\+Point (
+\begin{DoxyParamCaption}
+\item[{int}]{u, }
+\item[{int}]{v, }
+\item[{yarp\+::sig\+::\+Vector \&}]{point3D}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classkinectWrapper_1_1KinectWrapper_abc3df8e268fc0c8a799b1a1d061dde12}
+
+
+Project a pixel in 3D. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em u,the} & x coordinate of the pixel. \\
+\hline
+{\em v,the} & y coordinate of the pixel. \\
+\hline
+{\em point3D,the} & resultant 3D point in meters. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true/false if successful/failed. 
+\end{DoxyReturn}
+\index{kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}!get\+Depth@{get\+Depth}}
+\index{get\+Depth@{get\+Depth}!kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}}
+\subsubsection[{\texorpdfstring{get\+Depth(yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Mono16 $>$ \&depth\+Im, double $\ast$timestamp)=0}{getDepth(yarp::sig::ImageOf< yarp::sig::PixelMono16 > &depthIm, double *timestamp)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool kinect\+Wrapper\+::\+Kinect\+Wrapper\+::get\+Depth (
+\begin{DoxyParamCaption}
+\item[{yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Mono16 $>$ \&}]{depth\+Im, }
+\item[{double $\ast$}]{timestamp}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classkinectWrapper_1_1KinectWrapper_a67d94ddca5fdcbe8786e7ccbe1f5c068}
+
+
+Retrieve the depth image. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em depth\+Im} & the retrieved depth image, each pixel containing the distance in mm from the sensor. If you want to draw the depth image you need to normalize the values. \\
+\hline
+{\em timestamp} & when the depth image has been retrieved. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true/false if successful/failed. 
+\end{DoxyReturn}
+\index{kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}!get\+Depth@{get\+Depth}}
+\index{get\+Depth@{get\+Depth}!kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}}
+\subsubsection[{\texorpdfstring{get\+Depth(yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Float $>$ \&depth\+Im, double $\ast$timestamp)=0}{getDepth(yarp::sig::ImageOf< yarp::sig::PixelFloat > &depthIm, double *timestamp)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool kinect\+Wrapper\+::\+Kinect\+Wrapper\+::get\+Depth (
+\begin{DoxyParamCaption}
+\item[{yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Float $>$ \&}]{depth\+Im, }
+\item[{double $\ast$}]{timestamp}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classkinectWrapper_1_1KinectWrapper_a6703382dcc56e189a0b90921a7e06cc3}
+
+
+Retrieve the depth image. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em depth\+Im} & the retrieved depth image in float format. \\
+\hline
+{\em timestamp} & when the depth image has been retrieved. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true/false if successful/failed. 
+\end{DoxyReturn}
+\index{kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}!get\+Depth\+And\+Players@{get\+Depth\+And\+Players}}
+\index{get\+Depth\+And\+Players@{get\+Depth\+And\+Players}!kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}}
+\subsubsection[{\texorpdfstring{get\+Depth\+And\+Players(yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Mono16 $>$ \&depth\+Im, yarp\+::sig\+::\+Matrix \&players, double $\ast$timestamp)=0}{getDepthAndPlayers(yarp::sig::ImageOf< yarp::sig::PixelMono16 > &depthIm, yarp::sig::Matrix &players, double *timestamp)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool kinect\+Wrapper\+::\+Kinect\+Wrapper\+::get\+Depth\+And\+Players (
+\begin{DoxyParamCaption}
+\item[{yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Mono16 $>$ \&}]{depth\+Im, }
+\item[{yarp\+::sig\+::\+Matrix \&}]{players, }
+\item[{double $\ast$}]{timestamp}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classkinectWrapper_1_1KinectWrapper_a728566b395772504aee383bd761db018}
+
+
+Retrieve the depth image and a matrix containing information on players. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em depth\+Im} & the retrieved depth image, each pixel containing the distance in meters from the sensor. If you want to draw the depth image you need to normalize the values. \\
+\hline
+{\em players} & a matrix containing, for each cell, which player is present. \\
+\hline
+{\em timestamp} & when the depth image and the player matrix have been retrieved. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true/false if successful/failed. 
+\end{DoxyReturn}
+\index{kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}!get\+Depth\+And\+Players@{get\+Depth\+And\+Players}}
+\index{get\+Depth\+And\+Players@{get\+Depth\+And\+Players}!kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}}
+\subsubsection[{\texorpdfstring{get\+Depth\+And\+Players(yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Float $>$ \&depth\+Im, yarp\+::sig\+::\+Matrix \&players, double $\ast$timestamp)=0}{getDepthAndPlayers(yarp::sig::ImageOf< yarp::sig::PixelFloat > &depthIm, yarp::sig::Matrix &players, double *timestamp)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool kinect\+Wrapper\+::\+Kinect\+Wrapper\+::get\+Depth\+And\+Players (
+\begin{DoxyParamCaption}
+\item[{yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Float $>$ \&}]{depth\+Im, }
+\item[{yarp\+::sig\+::\+Matrix \&}]{players, }
+\item[{double $\ast$}]{timestamp}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classkinectWrapper_1_1KinectWrapper_ae5f7c0f9948262149ee032470baef9bc}
+
+
+Retrieve the depth image and a matrix containing information on players. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em depth\+Im} & the retrieved depth image in float format. \\
+\hline
+{\em players} & a matrix containing, for each cell, which player is present. \\
+\hline
+{\em timestamp} & when the depth image and the player matrix have been retrieved. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true/false if successful/failed. 
+\end{DoxyReturn}
+\index{kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}!get\+Depth\+Image@{get\+Depth\+Image}}
+\index{get\+Depth\+Image@{get\+Depth\+Image}!kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}}
+\subsubsection[{\texorpdfstring{get\+Depth\+Image(const yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Mono16 $>$ \&depth, yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Float $>$ \&depth\+To\+Display)=0}{getDepthImage(const yarp::sig::ImageOf< yarp::sig::PixelMono16 > &depth, yarp::sig::ImageOf< yarp::sig::PixelFloat > &depthToDisplay)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual void kinect\+Wrapper\+::\+Kinect\+Wrapper\+::get\+Depth\+Image (
+\begin{DoxyParamCaption}
+\item[{const yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Mono16 $>$ \&}]{depth, }
+\item[{yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Float $>$ \&}]{depth\+To\+Display}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classkinectWrapper_1_1KinectWrapper_a51bbf5f801626d07bfe6059fd80d1a50}
+
+
+Fill an image with the depth that can be displayed. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em depth} & depth image in \mbox{[}mm\mbox{]}. \\
+\hline
+{\em depth\+To\+Display} & depth image to display. \\
+\hline
+\end{DoxyParams}
+\index{kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}!get\+Info@{get\+Info}}
+\index{get\+Info@{get\+Info}!kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}}
+\subsubsection[{\texorpdfstring{get\+Info(yarp\+::os\+::\+Property \&opt)=0}{getInfo(yarp::os::Property &opt)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool kinect\+Wrapper\+::\+Kinect\+Wrapper\+::get\+Info (
+\begin{DoxyParamCaption}
+\item[{yarp\+::os\+::\+Property \&}]{opt}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classkinectWrapper_1_1KinectWrapper_a1cb049a6f2d2138edf35da4bc77e0530}
+
+
+Retrieve some info regarding which information is retrieved from kinect, whether the driver is opened in seated mode, the width and the height of the rgb image. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em opt} & Property containing all the information. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true/false if successful/failed. 
+\end{DoxyReturn}
+\index{kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}!get\+Joints@{get\+Joints}}
+\index{get\+Joints@{get\+Joints}!kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}}
+\subsubsection[{\texorpdfstring{get\+Joints(std\+::deque$<$ Player $>$ \&joints, double $\ast$timestamp)=0}{getJoints(std::deque< Player > &joints, double *timestamp)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool kinect\+Wrapper\+::\+Kinect\+Wrapper\+::get\+Joints (
+\begin{DoxyParamCaption}
+\item[{std\+::deque$<$ {\bf Player} $>$ \&}]{joints, }
+\item[{double $\ast$}]{timestamp}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classkinectWrapper_1_1KinectWrapper_aeaacd61922891a8375f9a35768e37580}
+
+
+Retrieve the joints position of all the players. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em joints} & a deque of Players, each \hyperlink{structkinectWrapper_1_1Player}{Player} containing information about its joints position. \\
+\hline
+{\em timestamp} & when the skeleton has been retrieved. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true/false if successful/failed. 
+\end{DoxyReturn}
+\index{kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}!get\+Joints@{get\+Joints}}
+\index{get\+Joints@{get\+Joints}!kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}}
+\subsubsection[{\texorpdfstring{get\+Joints(\+Player \&joints, int player, double $\ast$timestamp)=0}{getJoints(Player &joints, int player, double *timestamp)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool kinect\+Wrapper\+::\+Kinect\+Wrapper\+::get\+Joints (
+\begin{DoxyParamCaption}
+\item[{{\bf Player} \&}]{joints, }
+\item[{int}]{player, }
+\item[{double $\ast$}]{timestamp}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classkinectWrapper_1_1KinectWrapper_ab345e17fe0dc0d042c7fdf7f17dcb963}
+
+
+Retrieve the joints position of one player. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em joints} & one \hyperlink{structkinectWrapper_1_1Player}{Player} containing information about its joints position. \\
+\hline
+{\em player} & player ID, or K\+I\+N\+E\+C\+T\+\_\+\+T\+A\+G\+S\+\_\+\+C\+L\+O\+S\+E\+S\+T\+\_\+\+P\+L\+A\+Y\+ER if the closest player is wanted. \\
+\hline
+{\em timestamp} & when the skeleton has been retrieved. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true/false if successful/failed. 
+\end{DoxyReturn}
+\index{kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}!get\+Players@{get\+Players}}
+\index{get\+Players@{get\+Players}!kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}}
+\subsubsection[{\texorpdfstring{get\+Players(yarp\+::sig\+::\+Matrix \&players, double $\ast$timestamp)=0}{getPlayers(yarp::sig::Matrix &players, double *timestamp)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool kinect\+Wrapper\+::\+Kinect\+Wrapper\+::get\+Players (
+\begin{DoxyParamCaption}
+\item[{yarp\+::sig\+::\+Matrix \&}]{players, }
+\item[{double $\ast$}]{timestamp}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classkinectWrapper_1_1KinectWrapper_a71cf13b779d853330855cb079ecba774}
+
+
+Retrieve a matrix containing information on players. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em players} & a matrix containing, for each cell, which player is present. \\
+\hline
+{\em timestamp} & when the player matrix has been retrieved. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true/false if successful/failed. 
+\end{DoxyReturn}
+\index{kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}!get\+Players\+Image@{get\+Players\+Image}}
+\index{get\+Players\+Image@{get\+Players\+Image}!kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}}
+\subsubsection[{\texorpdfstring{get\+Players\+Image(const yarp\+::sig\+::\+Matrix \&players, yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Bgr $>$ \&image)=0}{getPlayersImage(const yarp::sig::Matrix &players, yarp::sig::ImageOf< yarp::sig::PixelBgr > &image)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual void kinect\+Wrapper\+::\+Kinect\+Wrapper\+::get\+Players\+Image (
+\begin{DoxyParamCaption}
+\item[{const yarp\+::sig\+::\+Matrix \&}]{players, }
+\item[{yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Bgr $>$ \&}]{image}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classkinectWrapper_1_1KinectWrapper_ad544a82270b338a2a07d66cf3883ca62}
+
+
+Fill an image with the players that are being tracked, each player with a different color. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em players} & Matrix containing, for each pixel, which player it belongs to. \\
+\hline
+{\em image} & the image to be filled. \\
+\hline
+\end{DoxyParams}
+\index{kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}!get\+Rgb@{get\+Rgb}}
+\index{get\+Rgb@{get\+Rgb}!kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}}
+\subsubsection[{\texorpdfstring{get\+Rgb(yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Rgb $>$ \&rgb\+Im, double $\ast$timestamp)=0}{getRgb(yarp::sig::ImageOf< yarp::sig::PixelRgb > &rgbIm, double *timestamp)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool kinect\+Wrapper\+::\+Kinect\+Wrapper\+::get\+Rgb (
+\begin{DoxyParamCaption}
+\item[{yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Rgb $>$ \&}]{rgb\+Im, }
+\item[{double $\ast$}]{timestamp}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classkinectWrapper_1_1KinectWrapper_a617ad32f3fc2aa8b16961a71dd827482}
+
+
+Retrieve the rgb image. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rgb\+Im} & the rgb image that has been retrieved. \\
+\hline
+{\em timestamp} & when the rgb image has been retrieved. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true/false if successful/failed. 
+\end{DoxyReturn}
+\index{kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}!get\+Skeleton\+Image@{get\+Skeleton\+Image}}
+\index{get\+Skeleton\+Image@{get\+Skeleton\+Image}!kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}}
+\subsubsection[{\texorpdfstring{get\+Skeleton\+Image(const std\+::deque$<$ Player $>$ \&players, yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Bgr $>$ \&image)=0}{getSkeletonImage(const std::deque< Player > &players, yarp::sig::ImageOf< yarp::sig::PixelBgr > &image)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual void kinect\+Wrapper\+::\+Kinect\+Wrapper\+::get\+Skeleton\+Image (
+\begin{DoxyParamCaption}
+\item[{const std\+::deque$<$ {\bf Player} $>$ \&}]{players, }
+\item[{yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Bgr $>$ \&}]{image}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classkinectWrapper_1_1KinectWrapper_a5ade44152da43fcae418e6baae7c713a}
+
+
+Fill an image with the players skeletons. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em players} & structure containing information on the players joint positions. \\
+\hline
+{\em image} & the image to be filled. \\
+\hline
+\end{DoxyParams}
+\index{kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}!get\+Skeleton\+Image@{get\+Skeleton\+Image}}
+\index{get\+Skeleton\+Image@{get\+Skeleton\+Image}!kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}}
+\subsubsection[{\texorpdfstring{get\+Skeleton\+Image(const Player \&player, yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Bgr $>$ \&image)=0}{getSkeletonImage(const Player &player, yarp::sig::ImageOf< yarp::sig::PixelBgr > &image)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual void kinect\+Wrapper\+::\+Kinect\+Wrapper\+::get\+Skeleton\+Image (
+\begin{DoxyParamCaption}
+\item[{const {\bf Player} \&}]{player, }
+\item[{yarp\+::sig\+::\+Image\+Of$<$ yarp\+::sig\+::\+Pixel\+Bgr $>$ \&}]{image}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classkinectWrapper_1_1KinectWrapper_a97c51c1e4e1b2918e62aa7621d26b7dc}
+
+
+Fill an image with the player skeleton. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em player} & structure containing information on the player joint positions. \\
+\hline
+{\em image} & the image to be filled. \\
+\hline
+\end{DoxyParams}
+\index{kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}!is\+Open@{is\+Open}}
+\index{is\+Open@{is\+Open}!kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}}
+\subsubsection[{\texorpdfstring{is\+Open()=0}{isOpen()=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool kinect\+Wrapper\+::\+Kinect\+Wrapper\+::is\+Open (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classkinectWrapper_1_1KinectWrapper_a40285a4cca39849bd49b759ea122cd17}
+
+
+Tells if the wrapper is open or not. 
+
+\begin{DoxyReturn}{Returns}
+true/false if the wrapper is open/close. 
+\end{DoxyReturn}
+\index{kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}!open@{open}}
+\index{open@{open}!kinect\+Wrapper\+::\+Kinect\+Wrapper@{kinect\+Wrapper\+::\+Kinect\+Wrapper}}
+\subsubsection[{\texorpdfstring{open(const yarp\+::os\+::\+Property \&options)=0}{open(const yarp::os::Property &options)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual bool kinect\+Wrapper\+::\+Kinect\+Wrapper\+::open (
+\begin{DoxyParamCaption}
+\item[{const yarp\+::os\+::\+Property \&}]{options}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\label{classkinectWrapper_1_1KinectWrapper_ad3781beb01dd66d4d7946336ff72b52c}
+
+
+Configure the client or the server part of the kinect\+Wrapper. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em options} & contains the set of options in form of a Property object.\\
+\hline
+\end{DoxyParams}
+Available options for the client are\+:
+
+{\bfseries remote} $<$string$>$\+: example (remote kinect\+Server), specifies the server port stem-\/name to connect to.
+
+{\bfseries local} $<$string$>$\+: example (local kinect\+Client), specifies the the client stem-\/name to be used for opening ports.
+
+{\bfseries carrier} $<$string$>$\+: example (carrier udp), specifies the protocol used to connect yarp streaming ports.
+
+{\bfseries verbosity} $<$int$>$\+: example (verbosity 3), specifies the verbosity level of print-\/outs messages.
+
+Available options for the server are\+:
+
+{\bfseries name} $<$string$>$\+: example (name kinect\+Server), specifies the name of the server to be launched.
+
+{\bfseries period} $<$int$>$\+: example (period 30), specifies the period given in \mbox{[}ms\mbox{]} for the streaming over yarp ports of data retrieved from the kinect device.
+
+{\bfseries verbosity} $<$int$>$\+: example (verbosity 3), specifies the verbosity level of print-\/outs messages.
+
+{\bfseries info} $<$string$>$\+: example (info K\+I\+N\+E\+C\+T\+\_\+\+T\+A\+G\+S\+\_\+\+A\+L\+L\+\_\+\+I\+N\+FO), specifies the info that is wanted to retrieve. If the parameter is equal to K\+I\+N\+E\+C\+T\+\_\+\+T\+A\+G\+S\+\_\+\+A\+L\+L\+\_\+\+I\+N\+FO, depth image, rgb image and skeleton information are retrieved. The alternatives are K\+I\+N\+E\+C\+T\+\_\+\+T\+A\+G\+S\+\_\+\+D\+E\+P\+TH, K\+I\+N\+E\+C\+T\+\_\+\+T\+A\+G\+S\+\_\+\+D\+E\+P\+T\+H\+\_\+\+P\+L\+A\+Y\+E\+RS, K\+I\+N\+E\+C\+T\+\_\+\+T\+A\+G\+S\+\_\+\+D\+E\+P\+T\+H\+\_\+\+R\+GB, K\+I\+N\+E\+C\+T\+\_\+\+T\+A\+G\+S\+\_\+\+D\+E\+P\+T\+H\+\_\+\+R\+G\+B\+\_\+\+P\+L\+A\+Y\+E\+RS and K\+I\+N\+E\+C\+T\+\_\+\+T\+A\+G\+S\+\_\+\+D\+E\+P\+T\+H\+\_\+\+J\+O\+I\+N\+TS.
+
+{\bfseries seated\+Mode} $<$bool$>$\+: if the property contains this value, seated\+Mode will be true, otherwise will be false. It can be true only if Microsoft S\+DK is used. If it is true, only upper body joints are tracked.
+
+{\bfseries image\+\_\+width} $<$int$>$\+: example (image\+\_\+width 320), specifies the width of the rgb image to send.
+
+{\bfseries image\+\_\+height} $<$int$>$\+: example (image\+\_\+height 240), specifies the height of the rgb image to send.
+
+\begin{DoxyReturn}{Returns}
+true/false if successful/failed. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/dev/icub-\/contrib-\/iit/kinect-\/wrapper/library/include/kinect\+Wrapper/kinect\+Wrapper.\+h\end{DoxyCompactItemize}
