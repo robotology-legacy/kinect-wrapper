@@ -1,4 +1,4 @@
-kinectWrapper
+Kinect Wrapper
 =============
 
 A C++ [YARP](https://github.com/robotology/yarp) library that wraps around Kinect SDK or OpenNI device drivers. The code contained here derives from the code developed in the [EFAA](http://efaa.upf.edu/) EU project.
@@ -31,7 +31,7 @@ In particular, the `KinectServer` is realized as a periodic thread that initiall
 
 ## Documentation
 
-Online documentation is available here: [http://robotology.github.io/kinectWrapper](http://robotology.github.io/kinectWrapper).
+Online documentation is available here: [http://robotology.github.io/kinect-wrapper](http://robotology.github.io/kinect-wrapper).
 
 ## License
 
