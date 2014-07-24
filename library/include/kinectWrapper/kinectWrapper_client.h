@@ -18,11 +18,11 @@
 #define __KINECTWRAPPER_CLIENT_H__
 
 #include <kinectWrapper/kinectWrapper.h>
-#include <kinectWrapper/kinectDriver.h>
 
 namespace kinectWrapper
 {
-    class KinectWrapperClient : public KinectWrapper
+
+class KinectWrapperClient : public KinectWrapper
 {
 protected:
     unsigned short buf[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
@@ -83,6 +83,7 @@ public:
     bool get3DPoint(int u, int v, yarp::sig::Vector &point3D);
     virtual ~KinectWrapperClient();
 };
+
 }
 
 #endif
