@@ -11,10 +11,6 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 find_package(KinectSDK)
 find_package(OpenNI)
 
-if (NOT KinectSDK_FOUND AND NOT OpenNI_FOUND)
-   message(FATAL_ERROR "At least one between KinectSDK and OpenNI packages must be available!")
-endif ()
-
 option(USE_KinectSDK "" TRUE)
 
 if (KinectSDK_FOUND AND (NOT OpenNI_FOUND))
