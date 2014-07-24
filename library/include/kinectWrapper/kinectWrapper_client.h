@@ -17,6 +17,17 @@
 #ifndef __KINECTWRAPPER_CLIENT_H__
 #define __KINECTWRAPPER_CLIENT_H__
 
+#include <string>
+#include <deque>
+
+#include <cv.h>
+#include <highgui.h>
+#include <cxcore.h>
+
+#include <yarp/os/all.h>
+#include <yarp/sig/all.h>
+
+#include <kinectWrapper/kinectTags.h>
 #include <kinectWrapper/kinectWrapper.h>
 
 namespace kinectWrapper
