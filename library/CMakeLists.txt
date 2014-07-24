@@ -11,18 +11,25 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 find_package(KinectSDK)
 find_package(OpenNI)
 
-option(USE_KinectSDK "" TRUE)
+#option(USE_KinectSDK "" TRUE)
 
 if (KinectSDK_FOUND AND (NOT OpenNI_FOUND))
+	message("Found KinectSDK only.")
 	set(USE_KinectSDK TRUE)
 elseif ((NOT KinectSDK_FOUND) AND OpenNI_FOUND)
+	message("Found OpenNI only.")
 	set(USE_KinectSDK FALSE)
+elseif ((NOT KinectSDK_FOUND) AND (NOT OpenNI_FOUND))
+	message("Neither OpenNI nor KinectSDK are found. You are screwed.")
+else()
+	message("Found both KinectSDK and OpenNI. Choose using cmake option (sdk by default.)")
+	option(USE_KinectSDK "" TRUE)
 endif()
 
 #cmake_dependent_option(USE_KinectSDK "Use KinectSDK" ON "KinectSDK_FOUND;NOT OpenNI_FOUND" OFF)
 
 if(NOT USE_KinectSDK)
-	message(STATUS "USE_KinectSDK if OFF, we will use OpenNI")
+	message(STATUS "USE_KinectSDK is OFF, we will use OpenNI")
 endif()
 
 #if (USE_KinectSDK AND NOT KinectSDK_FOUND)
