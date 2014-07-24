@@ -15,11 +15,24 @@ if (NOT KinectSDK_FOUND AND NOT OpenNI_FOUND)
    message(FATAL_ERROR "At least one between KinectSDK and OpenNI packages must be available!")
 endif ()
 
-cmake_dependent_option(USE_KinectSDK "Use KinectSDK" ON "KinectSDK_FOUND;NOT OpenNI_FOUND" OFF)
-if (USE_KinectSDK AND NOT KinectSDK_FOUND)
-   message(STATUS "you want to use KinectSDK but it is not available on your system; we switch to OpenNI.")
-   set(USE_KinectSDK OFF)
-endif ()
+option(USE_KinectSDK "" TRUE)
+
+if (KinectSDK_FOUND AND (NOT OpenNI_FOUND))
+	set(USE_KinectSDK TRUE)
+elseif ((NOT KinectSDK_FOUND) AND OpenNI_FOUND)
+	set(USE_KinectSDK FALSE)
+endif()
+
+#cmake_dependent_option(USE_KinectSDK "Use KinectSDK" ON "KinectSDK_FOUND;NOT OpenNI_FOUND" OFF)
+
+if(NOT USE_KinectSDK)
+	message(STATUS "USE_KinectSDK if OFF, we will use OpenNI")
+endif()
+
+#if (USE_KinectSDK AND NOT KinectSDK_FOUND)
+#   message(STATUS "you want to use KinectSDK but it is not available on your system; we switch to OpenNI.")
+#   set(USE_KinectSDK OFF)
+#endif ()
 
 include_directories(${PROJECT_SOURCE_DIR}/include
                     ${YARP_INCLUDE_DIRS}
