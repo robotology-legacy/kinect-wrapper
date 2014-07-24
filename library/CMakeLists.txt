@@ -20,22 +20,15 @@ elseif ((NOT KinectSDK_FOUND) AND OpenNI_FOUND)
 	message("Found OpenNI only.")
 	set(USE_KinectSDK FALSE)
 elseif ((NOT KinectSDK_FOUND) AND (NOT OpenNI_FOUND))
-	message("Neither OpenNI nor KinectSDK are found. You are screwed.")
+	message("Neither OpenNI nor KinectSDK are found. Only the client will be built.")
 else()
 	message("Found both KinectSDK and OpenNI. Choose using cmake option (sdk by default.)")
 	option(USE_KinectSDK "" TRUE)
 endif()
 
-#cmake_dependent_option(USE_KinectSDK "Use KinectSDK" ON "KinectSDK_FOUND;NOT OpenNI_FOUND" OFF)
-
 if(NOT USE_KinectSDK)
 	message(STATUS "USE_KinectSDK is OFF, we will use OpenNI")
 endif()
-
-#if (USE_KinectSDK AND NOT KinectSDK_FOUND)
-#   message(STATUS "you want to use KinectSDK but it is not available on your system; we switch to OpenNI.")
-#   set(USE_KinectSDK OFF)
-#endif ()
 
 include_directories(${PROJECT_SOURCE_DIR}/include
                     ${YARP_INCLUDE_DIRS}
@@ -76,19 +69,25 @@ endif ()
 
 target_link_libraries(${PROJECTNAME} ${YARP_LIBRARIES} ${OpenCV_LIBRARIES})
 
-if (USE_KinectSDK)
+if (USE_KinectSDK AND KinectSDK_FOUND)
     target_link_libraries(${PROJECTNAME} ${KinectSDK_LIBRARIES})
     icubcontrib_export_library(${PROJECTNAME} INTERNAL_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include
                                               EXTERNAL_INCLUDE_DIRS ${YARP_LIBRARIES} ${OpenCV_INCLUDE_DIRS} ${KinectSDK_INCLUDE_DIRS}
                                               DESTINATION include/kinectWrapper
                                               DEPENDS ${YARP_LIBRARIES} ${OpenCV_LIBRARIES} ${KinectSDK_LIBRARIES}
                                               FILES ${headers})
-else ()
+elseif ((NOT USE_KinectSDK) AND OpenNI_FOUND)
     target_link_libraries(${PROJECTNAME} ${OpenNI_LIBRARIES})
     icubcontrib_export_library(${PROJECTNAME} INTERNAL_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include
                                               EXTERNAL_INCLUDE_DIRS ${YARP_LIBRARIES} ${OpenCV_INCLUDE_DIRS} ${OpenNI_INCLUDE_DIR}
                                               DESTINATION include/kinectWrapper
                                               DEPENDS ${YARP_LIBRARIES} ${OpenCV_LIBRARIES} ${OpenNI_LIBRARIES}
+                                              FILES ${headers})
+else()
+	icubcontrib_export_library(${PROJECTNAME} INTERNAL_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include
+                                              EXTERNAL_INCLUDE_DIRS ${YARP_LIBRARIES} ${OpenCV_INCLUDE_DIRS}
+                                              DESTINATION include/kinectWrapper
+                                              DEPENDS ${YARP_LIBRARIES} ${OpenCV_LIBRARIES}
                                               FILES ${headers})
 endif ()
 

@@ -2,5 +2,7 @@
 # Authors: Ilaria Gori
 # CopyPolicy: Released under the terms of the GNU GPL v2.0.
 
-add_subdirectory(kinectServer)
+if(KinectSDK_FOUND OR OpenNI_FOUND)
+    add_subdirectory(kinectServer)
+endif()
 add_subdirectory(kinectClientExample)
