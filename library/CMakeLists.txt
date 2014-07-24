@@ -43,7 +43,7 @@ set(headers include/kinectWrapper/kinectTags.h
             include/kinectWrapper/kinectWrapper_client.h)
 set(sources src/kinectWrapper_client.cpp)
 
-if (USE_KinectSDK)
+if (USE_KinectSDK AND KinectSDK_FOUND)
    include_directories(${KinectSDK_INCLUDE_DIRS})
    LINK_DIRECTORIES(${KinectSDK_LIB_DIR})
    add_definitions(-D__USE_SDK__)
@@ -52,7 +52,7 @@ if (USE_KinectSDK)
                        include/kinectWrapper/kinectWrapper_server.h)
    list(APPEND sources src/kinectDriverSDK.cpp
                        src/kinectWrapper_server.cpp)
-else ()
+elseif ((NOT USE_KinectSDK) AND OpenNI_FOUND)
    include_directories(${OpenNI_INCLUDE_DIRS})
    add_definitions(-D__USE_OPENNI__)
    list(APPEND headers include/kinectWrapper/kinectDriver.h
