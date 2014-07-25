@@ -7,12 +7,6 @@ include(CMakeDependentOption)
 set(PROJECTNAME kinectWrapper)
 project(${PROJECTNAME})
 
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
-find_package(KinectSDK)
-find_package(OpenNI)
-
-#option(USE_KinectSDK "" TRUE)
-
 if (KinectSDK_FOUND AND (NOT OpenNI_FOUND))
 	message("Found KinectSDK only.")
 	set(USE_KinectSDK TRUE)
@@ -90,4 +84,6 @@ else()
                                               DEPENDS ${YARP_LIBRARIES} ${OpenCV_LIBRARIES}
                                               FILES ${headers})
 endif ()
+
+
 

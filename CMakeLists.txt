@@ -6,9 +6,12 @@ cmake_minimum_required(VERSION 2.8.7)
 
 set(PROJECTNAME kinectWrapper)
 project(${PROJECTNAME})
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/library/cmake)
 
 find_package(YARP REQUIRED)
 find_package(ICUBcontrib REQUIRED)
+find_package(KinectSDK)
+find_package(OpenNI)
 list(APPEND CMAKE_MODULE_PATH ${YARP_MODULE_PATH}
                               ${ICUBCONTRIB_MODULE_PATH})
 

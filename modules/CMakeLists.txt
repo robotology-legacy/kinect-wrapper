@@ -3,6 +3,7 @@
 # CopyPolicy: Released under the terms of the GNU GPL v2.0.
 
 if(KinectSDK_FOUND OR OpenNI_FOUND)
+	message(STATUS "kinectServer can be compiled!")
     add_subdirectory(kinectServer)
 endif()
 add_subdirectory(kinectClientExample)
