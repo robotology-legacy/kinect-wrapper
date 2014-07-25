@@ -261,11 +261,11 @@ bool KinectDriverOpenNI::readSkeleton(Bottle *skeleton, double &timestamp)
         Bottle bones;
         bones.clear();
         XnUserID aUsers[KINECT_TAGS_MAX_USERS];
-        XnUInt16 nUsers;
+        XnUInt16 nUsers=KINECT_TAGS_MAX_USERS;
         userGenerator.GetUsers(aUsers, nUsers);
         for (XnUInt16 i=0; i<nUsers; i++)
         {
-            if ((userGenerator.GetSkeletonCap().IsTracking(aUsers[i])==TRUE))
+            if (userGenerator.GetSkeletonCap().IsTracking(aUsers[i]))
             {
                 isTracking=true;
                 double comx=0.0;
