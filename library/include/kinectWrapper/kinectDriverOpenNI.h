@@ -27,7 +27,8 @@
 #include <cxcore.h>
 #include <yarp/os/Network.h>
 
-#include <XnCppWrapper.h>
+#include <OpenNI.h>
+#include <NiTE.h>
 
 #include <kinectWrapper/kinectTags.h>
 #include <kinectWrapper/kinectDriver.h>
@@ -54,14 +55,18 @@ private:
     IplImage* depthImage;
     CvMat* depthMat;
 
-    xn::Context context;
-    xn::DepthGenerator depthGenerator;
-    xn::ImageGenerator imageGenerator;
-    xn::UserGenerator userGenerator;
+    openni::Device device;
+    nite::UserTracker userTracker;
+    openni::VideoStream depthStream;
+    openni::VideoStream imageStream;
+    openni::VideoFrameRef depthFrame;
+    openni::VideoFrameRef imageFrame;
+    nite::UserTrackerFrameRef userFrame;
 
-    bool testRetVal(XnStatus nRetVal, std::string message);
+    bool testRetVal(openni::Status nRetVal, std::string message);
     void resizeImage(IplImage* depthTmp, IplImage* depthImage);
-    std::string jointNameAssociation(XnSkeletonJoint joint);
+    std::string jointNameAssociation(nite::JointType joint);
+    void updatePlayer(nite::JointType type, yarp::os::Bottle &player, nite::UserData& user, yarp::sig::Vector &com)
 
 public:
     bool initialize(yarp::os::Property &opt);
@@ -71,7 +76,6 @@ public:
     bool get3DPoint(int u, int v, yarp::sig::Vector &point3D);
     bool close();
     void update();
-    bool getRequireCalibrationPose();
 };
 }
 

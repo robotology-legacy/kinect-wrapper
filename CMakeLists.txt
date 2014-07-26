@@ -12,6 +12,8 @@ find_package(YARP REQUIRED)
 find_package(ICUBcontrib REQUIRED)
 find_package(KinectSDK)
 find_package(OpenNI)
+find_package(NITE)
+
 list(APPEND CMAKE_MODULE_PATH ${YARP_MODULE_PATH}
                               ${ICUBCONTRIB_MODULE_PATH})
 

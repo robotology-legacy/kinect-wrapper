@@ -20,6 +20,10 @@ else()
 	option(USE_KinectSDK "" TRUE)
 endif()
 
+if (OpenNI_FOUND AND (NOT NITE_FOUND))
+	message(STATUS "OpenNI has been found but NiTE has been not. Install NiTE or only the client will be built")
+endif()
+
 if(NOT USE_KinectSDK)
 	message(STATUS "USE_KinectSDK is OFF, we will use OpenNI")
 endif()
@@ -43,7 +47,7 @@ if (USE_KinectSDK AND KinectSDK_FOUND)
    list(APPEND sources src/kinectDriverSDK.cpp
                        src/kinectWrapper_server.cpp)
 elseif ((NOT USE_KinectSDK) AND OpenNI_FOUND)
-   include_directories(${OpenNI_INCLUDE_DIRS})
+   include_directories(${OpenNI2_INCLUDE_DIRS} ${NITE2_INCLUDE_DIRS})
    add_definitions(-D__USE_OPENNI__)
    list(APPEND headers include/kinectWrapper/kinectDriver.h
                        include/kinectWrapper/kinectDriverOpenNI.h
@@ -71,11 +75,11 @@ if (USE_KinectSDK AND KinectSDK_FOUND)
                                               DEPENDS ${YARP_LIBRARIES} ${OpenCV_LIBRARIES} ${KinectSDK_LIBRARIES}
                                               FILES ${headers})
 elseif ((NOT USE_KinectSDK) AND OpenNI_FOUND)
-    target_link_libraries(${PROJECTNAME} ${OpenNI_LIBRARIES})
+    target_link_libraries(${PROJECTNAME} ${OpenNI2_LIBRARIES} ${NITE2_LIBRARIES})
     icubcontrib_export_library(${PROJECTNAME} INTERNAL_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include
-                                              EXTERNAL_INCLUDE_DIRS ${YARP_LIBRARIES} ${OpenCV_INCLUDE_DIRS} ${OpenNI_INCLUDE_DIR}
+                                              EXTERNAL_INCLUDE_DIRS ${YARP_LIBRARIES} ${OpenCV_INCLUDE_DIRS} ${OpenNI2_INCLUDE_DIR}
                                               DESTINATION include/kinectWrapper
-                                              DEPENDS ${YARP_LIBRARIES} ${OpenCV_LIBRARIES} ${OpenNI_LIBRARIES}
+                                              DEPENDS ${YARP_LIBRARIES} ${OpenCV_LIBRARIES} ${OpenNI2_LIBRARIES}
                                               FILES ${headers})
 else()
 	icubcontrib_export_library(${PROJECTNAME} INTERNAL_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include
@@ -84,6 +88,4 @@ else()
                                               DEPENDS ${YARP_LIBRARIES} ${OpenCV_LIBRARIES}
                                               FILES ${headers})
 endif ()
-
-
 

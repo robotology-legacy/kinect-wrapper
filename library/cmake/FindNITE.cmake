@@ -28,15 +28,14 @@
 #  OpenNI_DIR - Directory where OpenNI was found (can be set by user to force 
 #               CMake to look in a particular directory)
 
-
-find_path(OpenNI2_INCLUDE_DIRS NAMES OpenNI.h HINTS $ENV{OPENNI2_INCLUDE})
-find_library(OpenNI2_LIBRARIES NAMES OpenNI2 libOpenNI2.dylib libOpenNI2 HINTS $ENV{OPENNI2_REDIST})
+find_path(NITE2_INCLUDE_DIRS NAMES NiTE.h HINTS $ENV{NITE2_INCLUDE})
+find_library(NITE2_LIBRARIES NAMES NiTE2 HINTS $ENV{NITE2_REDIST64})
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(OpenNI2 DEFAULT_MSG
-    OpenNI2_LIBRARIES OpenNI2_INCLUDE_DIRS)
+find_package_handle_standard_args(NITE2 DEFAULT_MSG
+    NITE2_LIBRARIES NITE2_INCLUDE_DIRS)
 
-set(OpenNI_FOUND ${OPENNI2_FOUND})
+set(NITE_FOUND ${NITE2_FOUND})
 
-mark_as_advanced(OpenNI2_LIBRARIES OpenNI2_INCLUDE_DIRS OpenNI_FOUND)
+mark_as_advanced(NITE2_LIBRARIES NITE2_INCLUDE_DIRS NITE_FOUND)
 
