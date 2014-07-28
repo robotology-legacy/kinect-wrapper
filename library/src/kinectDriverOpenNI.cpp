@@ -38,9 +38,6 @@ bool KinectDriverOpenNI::initialize(Property &opt)
         return false;
     }
 
-    //context.SetGlobalMirror(true); TOCHECK LATER
-    //VideoStream::setMirroringEnabled();
-
     rc=device.open(openni::ANY_DEVICE);
     if (!testRetVal(rc, "Opening device"))
     {
@@ -63,8 +60,6 @@ bool KinectDriverOpenNI::initialize(Property &opt)
     openni::VideoMode depth_videoMode  = depthStream.getVideoMode();
     this->def_depth_width=depth_videoMode.getResolutionX();
     this->def_depth_height=depth_videoMode.getResolutionY();
-    
-    printf("res depth x %d res depth y %d\n", this->def_depth_width, this->def_depth_height);
     
     rc=depthStream.start();
     if (!testRetVal(rc, "Starting depth"))
@@ -99,7 +94,6 @@ bool KinectDriverOpenNI::initialize(Property &opt)
         openni::VideoMode image_videoMode  = imageStream.getVideoMode();
         this->def_image_width=image_videoMode.getResolutionX();
         this->def_image_height=image_videoMode.getResolutionY();
-        printf("res rgb x %d res rgb y %d\n", this->def_image_width, this->def_image_height);
     }
 
     if (info==KINECT_TAGS_ALL_INFO || info==KINECT_TAGS_DEPTH_JOINTS || info==KINECT_TAGS_DEPTH_PLAYERS || info==KINECT_TAGS_DEPTH_RGB_PLAYERS)
@@ -170,10 +164,8 @@ bool KinectDriverOpenNI::readRgb(ImageOf<PixelRgb> &rgb, double &timestamp)
 {
     int ts=(int)imageFrame.getTimestamp();
     timestamp=(double)ts/1000.0;
-    /*const XnRGB24Pixel* pImage = imageGenerator.GetRGB24ImageMap();
-    XnRGB24Pixel* ucpImage = const_cast<XnRGB24Pixel*> (pImage);
-    cvSetData(rgb_big,ucpImage,this->def_image_width*3);
-    cvResize(rgb_big,(IplImage*)rgb.getIplImage());*/
+    rgb_big->imageData=(char*) imageFrame.getData();
+    cvResize(rgb_big,(IplImage*)rgb.getIplImage());
     return true;
 }
 
