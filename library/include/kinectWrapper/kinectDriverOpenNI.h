@@ -48,7 +48,7 @@ private:
     int def_image_width;
     int def_depth_width;
     int def_depth_height;
-    int device;
+    int sensor;
 
     IplImage* rgb_big;
     IplImage* depthTmp;
@@ -66,7 +66,7 @@ private:
     bool testRetVal(openni::Status nRetVal, std::string message);
     void resizeImage(IplImage* depthTmp, IplImage* depthImage);
     std::string jointNameAssociation(nite::JointType joint);
-    void updatePlayer(nite::JointType type, yarp::os::Bottle &player, nite::UserData& user, yarp::sig::Vector &com)
+    void updatePlayer(nite::JointType type, yarp::os::Bottle &player, const nite::UserData& user, yarp::sig::Vector &com);
 
 public:
     bool initialize(yarp::os::Property &opt);

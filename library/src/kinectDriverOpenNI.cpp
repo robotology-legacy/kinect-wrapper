@@ -20,7 +20,6 @@ using namespace std;
 using namespace yarp::os;
 using namespace yarp::sig;
 using namespace kinectWrapper;
-using namespace xn;
 
 /************************************************************************/
 bool KinectDriverOpenNI::initialize(Property &opt)
@@ -43,19 +42,18 @@ bool KinectDriverOpenNI::initialize(Property &opt)
     //VideoStream::setMirroringEnabled();
 
     rc=device.open(openni::ANY_DEVICE);
-    if (!testRecVal(rc, "Opening device"))
+    if (!testRetVal(rc, "Opening device"))
     {
         printf("%s\n", openni::OpenNI::getExtendedError());
         openni::OpenNI::shutdown();
         return false;       
     }
 
-    if (device.isImageRegistrationModeSupported(openni::IMAGE_REGISTRATION_DEPTH_TO_COLOR);){
+    if (device.isImageRegistrationModeSupported(openni::IMAGE_REGISTRATION_DEPTH_TO_COLOR))
         device.setImageRegistrationMode(openni::IMAGE_REGISTRATION_DEPTH_TO_COLOR);
-    }
     
     rc=depthStream.create(device, openni::SENSOR_DEPTH);
-    if (!testRecVal(rc, "Opening depth"))
+    if (!testRetVal(rc, "Opening depth"))
     {
         printf("%s\n", openni::OpenNI::getExtendedError());
         openni::OpenNI::shutdown();
@@ -66,8 +64,10 @@ bool KinectDriverOpenNI::initialize(Property &opt)
     this->def_depth_width=depth_videoMode.getResolutionX();
     this->def_depth_height=depth_videoMode.getResolutionY();
     
+    printf("res depth x %d res depth y %d\n", this->def_depth_width, this->def_depth_height);
+    
     rc=depthStream.start();
-    if (!testRecVal(rc, "Starting depth"))
+    if (!testRetVal(rc, "Starting depth"))
     {
         printf("%s\n", openni::OpenNI::getExtendedError());
         depthStream.destroy();
@@ -78,7 +78,7 @@ bool KinectDriverOpenNI::initialize(Property &opt)
     if (info==KINECT_TAGS_ALL_INFO || info==KINECT_TAGS_DEPTH_RGB || info==KINECT_TAGS_DEPTH_RGB_PLAYERS)
     {
         rc=imageStream.create(device, openni::SENSOR_COLOR);
-        if (!testRecVal(rc, "Opening RGB"))
+        if (!testRetVal(rc, "Opening RGB"))
         {
             printf("%s\n", openni::OpenNI::getExtendedError());
             depthStream.destroy();
@@ -87,7 +87,7 @@ bool KinectDriverOpenNI::initialize(Property &opt)
         }
         
         rc=imageStream.start();
-        if (!testRecVal(rc, "Starting RGB"))
+        if (!testRetVal(rc, "Starting RGB"))
         {
             printf("%s\n", openni::OpenNI::getExtendedError());
             depthStream.destroy();
@@ -99,14 +99,16 @@ bool KinectDriverOpenNI::initialize(Property &opt)
         openni::VideoMode image_videoMode  = imageStream.getVideoMode();
         this->def_image_width=image_videoMode.getResolutionX();
         this->def_image_height=image_videoMode.getResolutionY();
+        printf("res rgb x %d res rgb y %d\n", this->def_image_width, this->def_image_height);
     }
 
     if (info==KINECT_TAGS_ALL_INFO || info==KINECT_TAGS_DEPTH_JOINTS || info==KINECT_TAGS_DEPTH_PLAYERS || info==KINECT_TAGS_DEPTH_RGB_PLAYERS)
     {
-        nite::Status niteRc=nite::NiTE::initialize();
-        niteRc=userTracker.create(&device);
+        nite::Status niteRc;
+        nite::NiTE::initialize();
+        niteRc=userTracker.create();
         
-        if (niteRC!=nite::STATUS_OK)
+        if (niteRc!=nite::STATUS_OK)
         {
             printf("Cannot create user tracker\n");
             depthStream.destroy();
@@ -149,9 +151,14 @@ bool KinectDriverOpenNI::readDepth(ImageOf<PixelMono16> &depth, double &timestam
             depthMat->data.s[y * this->def_depth_width + x ]=finalValue;
         }
     }
-
-    cvGetImage(depthMat,depthTmp);
-    resizeImage(depthTmp,depthImage);
+    
+    if (this->def_depth_width!=320)
+    {
+        cvGetImage(depthMat,depthTmp);
+        resizeImage(depthTmp,depthImage);
+    }
+    else
+        cvGetImage(depthMat,depthImage);
 
     depth.wrapIplImage(depthImage);
 
@@ -161,14 +168,12 @@ bool KinectDriverOpenNI::readDepth(ImageOf<PixelMono16> &depth, double &timestam
 /************************************************************************/
 bool KinectDriverOpenNI::readRgb(ImageOf<PixelRgb> &rgb, double &timestamp)
 {
-    int ts=(int)imageStream.getTimestamp();
+    int ts=(int)imageFrame.getTimestamp();
     timestamp=(double)ts/1000.0;
-    const XnRGB24Pixel* pImage = imageGenerator.GetRGB24ImageMap();
+    /*const XnRGB24Pixel* pImage = imageGenerator.GetRGB24ImageMap();
     XnRGB24Pixel* ucpImage = const_cast<XnRGB24Pixel*> (pImage);
     cvSetData(rgb_big,ucpImage,this->def_image_width*3);
-    cvResize(rgb_big,(IplImage*)rgb.getIplImage());
-    int ts=(int)imageGenerator.GetTimestamp();
-    timestamp=(double)ts/1000.0;
+    cvResize(rgb_big,(IplImage*)rgb.getIplImage());*/
     return true;
 }
 
@@ -183,11 +188,10 @@ bool KinectDriverOpenNI::readSkeleton(Bottle *skeleton, double &timestamp)
     {
         Bottle bones;
         bones.clear();
-        const nite::Array<nite::UserData>& users = userTrackerFrame.getUsers();
+        const nite::Array<nite::UserData>& users = userFrame.getUsers();
         for (int i = 0; i < users.getSize(); ++i)
         {
             const nite::UserData& user = users[i];
-            updateUserState(user,userFrame.getTimestamp());
             
             if (user.isNew())
             {
@@ -248,7 +252,7 @@ bool KinectDriverOpenNI::readSkeleton(Bottle *skeleton, double &timestamp)
 }
 
 /************************************************************************/
-void KinectDriverOpenNI::updatePlayer(nite::JointType type, Bottle &player, nite::UserData& user, yarp::sig::Vector &com)
+void KinectDriverOpenNI::updatePlayer(nite::JointType type, Bottle &player, const nite::UserData& user, yarp::sig::Vector &com)
 {
     std::string jName = jointNameAssociation(type);
     const nite::SkeletonJoint& joint = user.getSkeleton().getJoint(type);
@@ -265,7 +269,7 @@ void KinectDriverOpenNI::updatePlayer(nite::JointType type, Bottle &player, nite
         //kinect with openni does not support 320x240 depth resolution, but we
         //need to send 320x240 depth images to avoid bandwidth problems, so
         //the x and y coordinates are divided by 2 to fit in the 320x240 image.
-        if (device==KINECT_TAGS_DEVICE_KINECT)
+        if (this->def_depth_width!=320)
         {
             limb.addInt((int)u/2);
             limb.addInt((int)v/2);
@@ -336,12 +340,6 @@ string KinectDriverOpenNI::jointNameAssociation(nite::JointType joint)
         case nite::JOINT_RIGHT_HAND:
             jointName=KINECT_TAGS_BODYPART_HAND_R;
             break;
-        case nite::JOINT_LEFT_WRIST:
-            jointName=KINECT_TAGS_BODYPART_WRIST_L;
-            break;
-        case nite::JOINT_RIGHT_WRIST:
-            jointName=KINECT_TAGS_BODYPART_WRIST_R;
-            break;
         case nite::JOINT_LEFT_ELBOW:
             jointName=KINECT_TAGS_BODYPART_ELBOW_L;
             break;
@@ -360,9 +358,6 @@ string KinectDriverOpenNI::jointNameAssociation(nite::JointType joint)
         case nite::JOINT_TORSO:
             jointName=KINECT_TAGS_BODYPART_SPINE;
             break;
-        case nite::JOINT_WAIST:
-            jointName=KINECT_TAGS_BODYPART_HIP_C;
-            break;
         case nite::JOINT_LEFT_HIP:
             jointName=KINECT_TAGS_BODYPART_HIP_L;
             break;
@@ -375,29 +370,11 @@ string KinectDriverOpenNI::jointNameAssociation(nite::JointType joint)
         case nite::JOINT_RIGHT_KNEE:
             jointName=KINECT_TAGS_BODYPART_KNEE_R;
             break;
-        case nite::JOINT_LEFT_ANKLE :
-            jointName=KINECT_TAGS_BODYPART_ANKLE_L;
-            break;
-        case nite::JOINT_RIGHT_ANKLE :
-            jointName=KINECT_TAGS_BODYPART_ANKLE_R;
-            break;
         case nite::JOINT_LEFT_FOOT:
             jointName=KINECT_TAGS_BODYPART_FOOT_L;
             break;
         case nite::JOINT_RIGHT_FOOT:
             jointName=KINECT_TAGS_BODYPART_FOOT_R;
-            break;
-        case nite::JOINT_LEFT_COLLAR:
-            jointName=KINECT_TAGS_BODYPART_COLLAR_L;
-            break;
-        case nite::JOINT_RIGHT_COLLAR:
-            jointName=KINECT_TAGS_BODYPART_COLLAR_R;
-            break;
-        case nite::JOINT_LEFT_FINGERTIP:
-            jointName=KINECT_TAGS_BODYPART_FT_L;
-            break;
-        case nite::JOINT_RIGHT_FINGERTIP:
-            jointName=KINECT_TAGS_BODYPART_FT_R;
             break;
     }
     return jointName;
@@ -406,13 +383,13 @@ string KinectDriverOpenNI::jointNameAssociation(nite::JointType joint)
 /************************************************************************/
 bool KinectDriverOpenNI::get3DPoint(int u, int v, yarp::sig::Vector &point3D)
 {
-    const XnDepthPixel* pDepthMap = depthGenerator.GetDepthMap();
+    /*const XnDepthPixel* pDepthMap = depthGenerator.GetDepthMap();
     XnPoint3D p2D, p3D;
     int newU=u;
     int newV=v;
     //request arrives with respect to the 320x240 image, but the depth by default
     // is 640x480 (we resize it before send it to the server)
-    if (device==KINECT_TAGS_DEVICE_KINECT)
+    if (sensor==KINECT_TAGS_DEVICE_KINECT)
     {
         newU=u*2;
         newV=v*2;
@@ -427,7 +404,7 @@ bool KinectDriverOpenNI::get3DPoint(int u, int v, yarp::sig::Vector &point3D)
     point3D.resize(3,0.0);
     point3D[0]=p3D.X/1000;
     point3D[1]=p3D.Y/1000;
-    point3D[2]=p3D.Z/1000;
+    point3D[2]=p3D.Z/1000;*/
     
     return true;
 }
