@@ -58,6 +58,7 @@ bool KinectDriverOpenNI::initialize(Property &opt)
     }
     
     openni::VideoMode depth_videoMode  = depthStream.getVideoMode();
+    depth_videoMode.setResolution(this->img_width,this->img_height);
     this->def_depth_width=depth_videoMode.getResolutionX();
     this->def_depth_height=depth_videoMode.getResolutionY();
     
@@ -92,6 +93,7 @@ bool KinectDriverOpenNI::initialize(Property &opt)
         }
         
         openni::VideoMode image_videoMode  = imageStream.getVideoMode();
+        image_videoMode.setResolution(this->img_width,this->img_height);
         this->def_image_width=image_videoMode.getResolutionX();
         this->def_image_height=image_videoMode.getResolutionY();
     }
@@ -134,13 +136,14 @@ bool KinectDriverOpenNI::readDepth(ImageOf<PixelMono16> &depth, double &timestam
     {
         for(int x=0; x<this->def_depth_width; x++, pLabels++, pDepth++)
         {
-            int player=*pLabels;
-            int depth=*pDepth;
-            int finalValue=0;
+            unsigned short player=*pLabels;
+            unsigned short depth=*pDepth;
+            unsigned short finalValue=0;
             finalValue|=((depth<<3)&0XFFF8);
             finalValue|=(player&0X0007);
-            //if (x==320 && y==240)
-             //   fprintf(stdout, "%d %d\n", ((finalValue&0XFFF8)>>3), finalValue&0X0007);
+            /*unsigned short realDepth = ((finalValue&0XFFF8)>>3);
+            if (x==160 && y==120)
+               printf("depth %d realDepth %d\n", depth, realDepth);*/
             //We associate the depth to the first 13 bits, using the last 3 for the player identification
             depthMat->data.s[y * this->def_depth_width + x ]=finalValue;
         }
@@ -232,9 +235,6 @@ bool KinectDriverOpenNI::readSkeleton(Bottle *skeleton, double &timestamp)
         }
         if(isTracking)
         {
-            //The stop tracking procedure is quite slow; we cannot allow the tracking to send inconsistent data to the
-            //OPC; if the confidence of all the joints is lower than 0.5, we assume that the tracker actually is not
-            //tracking anything, so the only joint written is CoM. In this case we do not send skeleton information.
             if((bones.get(0).asList()->get(1).asList()->get(0).asString()!=KINECT_TAGS_BODYPART_COM));
                 *skeleton=bones;
         }
@@ -375,28 +375,26 @@ string KinectDriverOpenNI::jointNameAssociation(nite::JointType joint)
 /************************************************************************/
 bool KinectDriverOpenNI::get3DPoint(int u, int v, yarp::sig::Vector &point3D)
 {
-    /*const XnDepthPixel* pDepthMap = depthGenerator.GetDepthMap();
-    XnPoint3D p2D, p3D;
     int newU=u;
     int newV=v;
     //request arrives with respect to the 320x240 image, but the depth by default
     // is 640x480 (we resize it before send it to the server)
-    if (sensor==KINECT_TAGS_DEVICE_KINECT)
+    if (this->def_image_width!=320)
     {
         newU=u*2;
         newV=v*2;
     }
 
-    p2D.X = newU;
-    p2D.Y = newV;
-    p2D.Z = pDepthMap[newV*this->def_depth_width+newU];
-    depthGenerator.ConvertProjectiveToRealWorld(1, &p2D, &p3D);
-
+    const openni::DepthPixel* pDepth=(const openni::DepthPixel*)depthFrame.getData();
+    openni::DepthPixel d=pDepth[(u*this->def_image_width)+v];
+    float x, y, z;
+    openni::CoordinateConverter::convertDepthToWorld(depthStream,newU,newV,d,&x,&y,&z);
+    
     //We provide the 3D point in meters
     point3D.resize(3,0.0);
-    point3D[0]=p3D.X/1000;
-    point3D[1]=p3D.Y/1000;
-    point3D[2]=p3D.Z/1000;*/
+    point3D[0]=x/1000;
+    point3D[1]=y/1000;
+    point3D[2]=z/1000;
     
     return true;
 }
