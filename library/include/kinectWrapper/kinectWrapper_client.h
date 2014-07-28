@@ -36,10 +36,6 @@ namespace kinectWrapper
 class KinectWrapperClient : public KinectWrapper
 {
 protected:
-    unsigned short buf[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
-    unsigned short bufPl[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
-    float bufF[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
-    float bufFPl[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
     bool opening;
     bool init;
     bool seatedMode;

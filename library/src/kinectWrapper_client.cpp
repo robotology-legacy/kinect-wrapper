@@ -86,10 +86,10 @@ bool KinectWrapperClient::open(const Property &options)
         return false;
     }
 
-    depthCV=cvCreateImageHeader(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_16U,1);
-    depthCVPl=cvCreateImageHeader(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_16U,1);
-    depthFCV=cvCreateImageHeader(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_32F,1);
-    depthFCVPl=cvCreateImageHeader(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_32F,1);
+    depthCV=cvCreateImage(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_16U,1);
+    depthCVPl=cvCreateImage(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_16U,1);
+    depthFCV=cvCreateImage(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_32F,1);
+    depthFCVPl=cvCreateImage(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_32F,1);
     playersImage=cvCreateImage(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_8U,3);
     skeletonImage=cvCreateImage(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_8U,3);
     depthTmp=cvCreateImage(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_16U,1);
@@ -186,10 +186,10 @@ void KinectWrapperClient::close()
             imagePort.close();
         }
 
-        cvReleaseImageHeader(&depthCV);
-        cvReleaseImageHeader(&depthCVPl);
-        cvReleaseImageHeader(&depthFCV);
-        cvReleaseImageHeader(&depthFCVPl);
+        cvReleaseImage(&depthCV);
+        cvReleaseImage(&depthCVPl);
+        cvReleaseImage(&depthFCV);
+        cvReleaseImage(&depthFCVPl);
         cvReleaseImage(&playersImage);
         cvReleaseImage(&skeletonImage);
         cvReleaseImage(&depthToShow);
@@ -215,13 +215,20 @@ bool KinectWrapperClient::getDepth(ImageOf<PixelMono16> &depthIm, double *timest
             depthPort.getEnvelope(ts);
             double timestampD=ts.get(0).asDouble();
             unsigned short* pBuff=(unsigned short*)img->getRawImage();
+            int m=0;
+            int n=0;
             for (int i=0; i<img->width()*img->height(); i++)
             {
                 //We take only the first 13 bits, that contain the depth value in mm
                 unsigned short realDepth = (pBuff[i]&0xFFF8)>>3;
-                buf[i]=realDepth;
+                CV_IMAGE_ELEM(depthCV, uint16_t, m, n)=realDepth;
+                if (n==img->width())
+                {
+                    n=0;
+                    m++;
+                }
+                n++;
             }
-            cvSetData(depthCV,buf,KINECT_TAGS_DEPTH_WIDTH*2);
             depthIm.wrapIplImage(depthCV);
             if (timestamp!=NULL)
                 timestamp=&timestampD;
@@ -250,14 +257,21 @@ bool KinectWrapperClient::getDepth(ImageOf<PixelFloat> &depthIm, double *timesta
             depthPort.getEnvelope(ts);
             double timestampD=ts.get(0).asDouble();
             unsigned short* pBuff=(unsigned short*)img->getRawImage();
+            int n=0;
+            int m=0;
             for (int i=0; i<img->width()*img->height(); i++)
             {
                 //We take only the first 13 bits, that contain the depth value in mm
                 unsigned short realDepth = (pBuff[i]&0xFFF8);
                 float scale=((1.0*realDepth/0xFFF8));
-                bufF[i]=scale;
+                CV_IMAGE_ELEM(depthFCV, float, m, n)=scale;
+                if (n==img->width())
+                {
+                    n=0;
+                    m++;
+                }
+                n++;
             }
-            cvSetData(depthFCV,bufF,KINECT_TAGS_DEPTH_WIDTH*4);
             depthIm.wrapIplImage(depthFCV);
             if (timestamp!=NULL)
                 timestamp=&timestampD;
@@ -375,7 +389,7 @@ bool KinectWrapperClient::getDepthAndPlayers(ImageOf<PixelMono16> &depthIm, Matr
                 for (int i=0; i<img->width()*img->height(); i++)
                 {
                     unsigned short realDepth = (pBuff[i]&0xFFF8)>>3;
-                    bufPl[i]=realDepth;
+                    CV_IMAGE_ELEM(depthCVPl, uint16_t, m, n)=realDepth;
                     int p=(pBuff[i]&0x0007);
                     if (n==img->width())
                     {
@@ -385,7 +399,6 @@ bool KinectWrapperClient::getDepthAndPlayers(ImageOf<PixelMono16> &depthIm, Matr
                     players(m,n)=p;
                     n++;
                 }
-                cvSetData(depthCVPl,bufPl,KINECT_TAGS_DEPTH_WIDTH*2);
                 depthIm.wrapIplImage(depthCVPl);
                 if (timestamp!=NULL)
                     timestamp=&timestampD;
@@ -428,7 +441,7 @@ bool KinectWrapperClient::getDepthAndPlayers(ImageOf<PixelFloat> &depthIm, Matri
                 {
                     unsigned short realDepth = (pBuff[i]&0xFFF8);
                     float scale=((1.0*realDepth/0xFFF8));
-                    bufFPl[i]=scale;
+                    CV_IMAGE_ELEM(depthFCVPl, float, m, n)=scale;
                     int p=(pBuff[i]&0x0007);
                     if (n==img->width())
                     {
@@ -438,7 +451,6 @@ bool KinectWrapperClient::getDepthAndPlayers(ImageOf<PixelFloat> &depthIm, Matri
                     players(m,n)=p;
                     n++;
                 }
-                cvSetData(depthFCVPl,bufFPl,KINECT_TAGS_DEPTH_WIDTH*4);
                 depthIm.wrapIplImage(depthFCVPl);
                 if (timestamp!=NULL)
                     timestamp=&timestampD;

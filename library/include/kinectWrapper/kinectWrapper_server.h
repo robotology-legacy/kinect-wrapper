@@ -40,10 +40,6 @@ class KinectWrapperServer : public KinectWrapper,
                   public yarp::os::PortReader
 {
 protected:
-    unsigned short* buf;
-    unsigned short* bufPl;
-    float* bufF;
-    float* bufFPl;
     bool opening;
     bool seatedMode;
     bool useSDK;
