@@ -42,6 +42,7 @@ protected:
     float bufFPl[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
     bool opening;
     bool init;
+	bool noRpc;
     bool seatedMode;
     bool drawAll;
     int verbosity;
