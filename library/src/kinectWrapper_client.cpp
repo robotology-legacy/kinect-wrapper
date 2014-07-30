@@ -69,6 +69,7 @@ bool KinectWrapperClient::open(const Property &options)
 
     carrier=opt.check("carrier",Value("udp")).asString().c_str();
     verbosity=opt.check("verbosity",Value(0)).asInt();
+	noRpc = opt.check("noRPC");
 
     if (opt.check("remote"))
         remote=opt.find("remote").asString().c_str();
@@ -96,55 +97,66 @@ bool KinectWrapperClient::open(const Property &options)
     depthToShow=cvCreateImage(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_32F,1);
 
     depthPort.open(("/"+local+"/depth:i").c_str());
-    rpc.open(("/"+local+"/rpc").c_str());
+	bool ok = true;
+	if (!noRpc)
+	{
+		rpc.open(("/" + local + "/rpc").c_str());
+		ok &= Network::connect(rpc.getName().c_str(), ("/" + remote + "/rpc").c_str());
+	}
+	else
+	{
+		std::cout << "noRPC option. Working with info/size from client options." << endl;
+		info = opt.check("info", Value(KINECT_TAGS_ALL_INFO)).asString();
+		img_width = opt.check("width", Value(KINECT_TAGS_DEPTH_WIDTH)).asInt();
+		img_height = opt.check("height", Value(KINECT_TAGS_DEPTH_WIDTH)).asInt();
+	}
 
-    bool ok=true;
+	if (!noRpc)
+	{
+		if (ok)
+		{
+			Bottle cmd, reply;
+			cmd.addString(KINECT_TAGS_CMD_PING);
 
-    ok&=Network::connect(rpc.getName().c_str(),("/"+remote+"/rpc").c_str());
+			if (rpc.write(cmd, reply))
+			{
+				if (reply.size() > 0)
+				{
+					if (reply.get(0).asString() == KINECT_TAGS_CMD_ACK)
+					{
+						printMessage(1, "successfully connected with the server %s!\n", remote.c_str());
 
-    if (ok)
-    {
-        Bottle cmd,reply;
-        cmd.addString(KINECT_TAGS_CMD_PING);
+						info = reply.get(1).asString().c_str();
+						img_width = reply.get(2).asInt();
+						img_height = reply.get(3).asInt();
+						if (reply.get(4).asString() == KINECT_TAGS_SEATED_MODE)
+							seatedMode = true;
+						else
+							seatedMode = false;
+						if (reply.get(5).asString() == "drawAll")
+							drawAll = true;
+						else
+							drawAll = false;
+					}
+				}
+			}
+			else
+			{
+				printMessage(1, "unable to get correct reply from the server %s!\n", remote.c_str());
+				close();
 
-        if (rpc.write(cmd,reply))
-        {
-            if (reply.size()>0)
-            {
-                if (reply.get(0).asString()==KINECT_TAGS_CMD_ACK)
-                {
-                    printMessage(1,"successfully connected with the server %s!\n",remote.c_str());
+				return false;
+			}
+		}
+		else
+		{
+			printMessage(1, "unable to connect to the server %s!\n", remote.c_str());
+			close();
 
-                    info=reply.get(1).asString().c_str();
-                    img_width=reply.get(2).asInt();
-                    img_height=reply.get(3).asInt();
-                    if (reply.get(4).asString()==KINECT_TAGS_SEATED_MODE)
-                        seatedMode=true;
-                    else
-                        seatedMode=false;
-                    if (reply.get(5).asString()=="drawAll")
-                        drawAll=true;
-                    else
-                        drawAll=false;
-                }
-            }
-        }
-        else
-        {
-            printMessage(1,"unable to get correct reply from the server %s!\n",remote.c_str());
-            close();
-
-            return false;
-        }
-    }
-    else
-    {
-        printMessage(1,"unable to connect to the server %s!\n",remote.c_str());
-        close();
-
-        return false;
-    }
-    ok=true;
+			return false;
+		}
+	}
+	ok = true;
     ok&=Network::connect(("/"+remote+"/depth:o").c_str(),depthPort.getName().c_str(),carrier.c_str());
     if (info==KINECT_TAGS_ALL_INFO || info==KINECT_TAGS_DEPTH_RGB || info==KINECT_TAGS_DEPTH_RGB_PLAYERS)
     {
@@ -172,7 +184,8 @@ void KinectWrapperClient::close()
         rpc.interrupt();
 
         depthPort.close();
-        rpc.close();
+		if (!noRpc)
+			rpc.close();
 
         if (info==KINECT_TAGS_ALL_INFO || info==KINECT_TAGS_DEPTH_JOINTS)
         {
