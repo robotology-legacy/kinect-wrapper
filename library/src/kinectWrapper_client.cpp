@@ -105,7 +105,7 @@ bool KinectWrapperClient::open(const Property &options)
 	  }
 	  else
 	  {
-		    printf("noRPC option. Working with info/size from client options.\n";
+		    printf("noRPC option. Working with info/size from client options.\n");
 		    info = opt.check("info", Value(KINECT_TAGS_ALL_INFO)).asString();
 		    img_width = opt.check("width", Value(KINECT_TAGS_DEPTH_WIDTH)).asInt();
 		    img_height = opt.check("height", Value(KINECT_TAGS_DEPTH_WIDTH)).asInt();
