@@ -509,4 +509,20 @@ void KinectDriverOpenNI::resizeImage(IplImage* depthTmp, IplImage* depthImage)
     }
 }
 
+bool KinectDriverOpenNI::getFocalLength(double &focallength)
+{
+    XnUInt64 zeroPlanDistance;
+    XnDouble pixelSize = 1.0;
+    if( depthGenerator.GetIntProperty( "ZPD", zeroPlanDistance ) != XN_STATUS_OK )
+        return false;
+    if( depthGenerator.GetRealProperty( "ZPPS", pixelSize ) != XN_STATUS_OK )
+        return false;
+
+    // pixel size @ VGA = pixel size @ SXGA x 2
+    pixelSize *= 4.0; // in mm
+
+    focallength = (double)zeroPlanDistance / (double)pixelSize;
+
+    return true;
+}
 

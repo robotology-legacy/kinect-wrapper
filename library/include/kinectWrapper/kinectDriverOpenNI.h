@@ -69,6 +69,7 @@ public:
     bool readRgb(yarp::sig::ImageOf<yarp::sig::PixelRgb> &rgb, double &timestamp);
     bool readSkeleton(yarp::os::Bottle *skeleton, double &timestamp);
     bool get3DPoint(int u, int v, yarp::sig::Vector &point3D);
+    bool getFocalLength(double &focallength);
     bool close();
     void update();
     bool getRequireCalibrationPose();

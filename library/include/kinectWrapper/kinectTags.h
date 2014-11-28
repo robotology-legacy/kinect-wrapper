@@ -35,6 +35,7 @@
 #define KINECT_TAGS_CMD_ACK                 "ack"
 #define KINECT_TAGS_CMD_NACK                "nack"
 #define KINECT_TAGS_CMD_GET3DPOINT          "get3D"
+#define KINECT_TAGS_CMD_GETFOCALLENGTH      "getFL"
 #define KINECT_TAGS_SEATED_MODE             "seated"
 #define KINECT_TAGS_CLOSEST_PLAYER          -1
 
