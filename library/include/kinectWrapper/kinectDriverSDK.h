@@ -54,9 +54,7 @@ private:
 
 public:
 
-    KinectDriverSDK()
-    {
-    }
+    KinectDriverSDK() { }
     bool initialize(yarp::os::Property &opt);
     bool readRgb(yarp::sig::ImageOf<yarp::sig::PixelRgb> &rgb, double &timestamp);
     bool readDepth(yarp::sig::ImageOf<yarp::sig::PixelMono16> &depth, double &timestamp);

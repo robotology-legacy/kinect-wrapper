@@ -42,7 +42,7 @@ protected:
     float bufFPl[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
     bool opening;
     bool init;
-	bool noRpc;
+    bool noRpc;
     bool seatedMode;
     bool drawAll;
     int verbosity;
@@ -93,7 +93,7 @@ public:
     void getDepthImage(const yarp::sig::ImageOf<yarp::sig::PixelMono16> &depth, yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthToDisplay);
     bool getInfo(yarp::os::Property &opt);
     bool get3DPoint(int u, int v, yarp::sig::Vector &point3D);
-	bool getFocalLength(double &focallength);
+    bool getFocalLength(double &focallength);
     virtual ~KinectWrapperClient();
 };
 

@@ -264,6 +264,7 @@ public:
      */
     virtual ~KinectWrapper() { }
 };
+
 }
 
 #endif
