@@ -76,6 +76,15 @@ bool KinectWrapperServer::read(ConnectionReader &connection)
             else
                 reply.addString(KINECT_TAGS_CMD_NACK);
         }
+        else if (cmd.get(0).asString()==KINECT_TAGS_CMD_GETFOCALLENGTH) {
+            double focal_length;
+            if(getFocalLength(focal_length)) {
+                reply.addString(KINECT_TAGS_CMD_ACK);
+                reply.addDouble(focal_length);
+            }
+            else
+                reply.addString(KINECT_TAGS_CMD_NACK);
+            }
     }
 
     ConnectionWriter *returnToSender=connection.getWriter();
@@ -828,6 +837,12 @@ void KinectWrapperServer::getDepthImage(const yarp::sig::ImageOf<yarp::sig::Pixe
 bool KinectWrapperServer::get3DPoint(int u, int v, yarp::sig::Vector &point3D)
 {
     driver->get3DPoint(u,v,point3D);
+    return true;
+}
+
+bool KinectWrapperServer::getFocalLength(double &focallength)
+{
+    driver->getFocalLength(focallength);
     return true;
 }
 

@@ -438,6 +438,9 @@ void KinectDriverSDK::update()
     //sdk updates one data stream per time
 }
 
+bool KinectDriverSDK::getFocalLength(double &focallength)
+{
+    focallength = NUI_CAMERA_DEPTH_NOMINAL_FOCAL_LENGTH_IN_PIXELS;
 
-
-
+    return true;
+}

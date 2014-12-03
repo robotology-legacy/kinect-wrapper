@@ -93,6 +93,7 @@ public:
     void getDepthImage(const yarp::sig::ImageOf<yarp::sig::PixelMono16> &depth, yarp::sig::ImageOf<yarp::sig::PixelFloat> &depthToDisplay);
     bool getInfo(yarp::os::Property &opt);
     bool get3DPoint(int u, int v, yarp::sig::Vector &point3D);
+	bool getFocalLength(double &focallength);
     virtual ~KinectWrapperClient();
 };
 

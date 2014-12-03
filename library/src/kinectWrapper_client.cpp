@@ -869,6 +869,36 @@ bool KinectWrapperClient::get3DPoint(int u, int v, yarp::sig::Vector &point3D)
 }
 
 /************************************************************************/
+bool KinectWrapperClient::getFocalLength(double &focallength)
+{
+    if (opening)
+    {
+        Bottle cmd,reply;
+        cmd.addString(KINECT_TAGS_CMD_GETFOCALLENGTH);
+
+        if (rpc.write(cmd,reply))
+        {
+            if (reply.size()>0)
+            {
+                if (reply.get(0).asString()==KINECT_TAGS_CMD_ACK)
+                {
+                    printMessage(1,"successfully connected with the server %s!\n",remote.c_str());
+
+                    focallength=reply.get(1).asDouble();
+
+                    return true;
+                }
+            }
+        }
+        printMessage(1,"unable to get correct reply from the server %s!\n",remote.c_str());
+
+        return false;
+    }
+    else
+        return false;
+}
+
+/************************************************************************/
 bool KinectWrapperClient::isOpen()
 {
     return opening;

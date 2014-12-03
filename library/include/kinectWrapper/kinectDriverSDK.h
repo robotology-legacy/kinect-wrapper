@@ -62,6 +62,7 @@ public:
     bool readDepth(yarp::sig::ImageOf<yarp::sig::PixelMono16> &depth, double &timestamp);
     bool readSkeleton(yarp::os::Bottle *skeleton, double &timestamp);
     bool get3DPoint(int u, int v, yarp::sig::Vector &point3D);
+    bool getFocalLength(double &focallength);
     bool close();
     void update();
 };

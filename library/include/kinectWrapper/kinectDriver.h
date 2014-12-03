@@ -114,6 +114,13 @@ public:
     virtual bool get3DPoint(int u, int v, yarp::sig::Vector &point3D) = 0;
 
     /**
+    * Get focal length of attached camera
+    * @param focallength, the focal length of the camera.
+    * @return true/false if successful/failed.
+    */
+    virtual bool getFocalLength(double &focallength) = 0;
+
+    /**
     * Update all the required information.
     */
     virtual void update() = 0;
