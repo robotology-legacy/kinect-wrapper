@@ -110,7 +110,7 @@ bool KinectDriverOpenNI::initialize(Property &opt)
 
     depthTmp=cvCreateImage(cvSize(def_depth_width,def_depth_height),IPL_DEPTH_16U,1);
     depthImage=cvCreateImage(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_16U,1);
-    rgb_big=cvCreateImageHeader(cvSize(def_image_width,def_image_height),IPL_DEPTH_8U,3);
+    rgb_big=cvCreateImageHeader(cvSize(img_width,img_height),IPL_DEPTH_8U,3);
     depthMat = cvCreateMat(def_depth_height,def_depth_width,CV_16UC1);
 
     XnStatus nRetVal = XN_STATUS_OK;
@@ -136,6 +136,14 @@ bool KinectDriverOpenNI::initialize(Property &opt)
     {
         nRetVal = imageGenerator.Create(context);
         if (!testRetVal(nRetVal, "Image generator"))
+            return false;
+
+        XnMapOutputMode mapModeImage;
+        mapModeImage.nXRes = this->img_width;
+        mapModeImage.nYRes = this->img_height;
+        mapModeImage.nFPS = 30;
+        nRetVal = imageGenerator.SetMapOutputMode(mapModeImage);
+        if(!testRetVal(nRetVal, "Image Output Setting"))
             return false;
 
         if (requireRemapping && depthGenerator.IsCapabilitySupported(XN_CAPABILITY_ALTERNATIVE_VIEW_POINT))
@@ -242,7 +250,7 @@ bool KinectDriverOpenNI::readRgb(ImageOf<PixelRgb> &rgb, double &timestamp)
 {
     const XnRGB24Pixel* pImage = imageGenerator.GetRGB24ImageMap();
     XnRGB24Pixel* ucpImage = const_cast<XnRGB24Pixel*> (pImage);
-    cvSetData(rgb_big,ucpImage,this->def_image_width*3);
+    cvSetData(rgb_big,ucpImage,this->img_width*3);
     cvResize(rgb_big,(IplImage*)rgb.getIplImage());
     int ts=(int)imageGenerator.GetTimestamp();
     timestamp=(double)ts/1000.0;
