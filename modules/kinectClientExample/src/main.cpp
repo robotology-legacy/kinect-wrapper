@@ -40,7 +40,7 @@ It requires the \ref kinectServer running.
 --remote \e remote
 - specify the kinectServer name to connect to.
 
---local \e name
+--name \e name
 - specify the kinectClient stem-name.
 
 \section tested_os_sec Tested OS
@@ -89,6 +89,8 @@ public:
         int verbosity=rf.check("verbosity",Value(0)).asInt();
         string name=rf.check("name",Value("kinectClientExample")).asString().c_str();
         string show=rf.check("showImages",Value("false")).asString().c_str();
+        string remote=rf.check("remote",Value("kinectServer")).asString().c_str();
+        string carrier=rf.check("carrier",Value("udp")).asString().c_str();
         showImages=(show=="true");
         
         depthPort.open("/"+name+"/depthPort:o");
@@ -97,8 +99,8 @@ public:
         skeletonPort.open("/"+name+"/skeletonPort:o");
 
         Property options;
-        options.put("carrier","udp");
-        options.put("remote","kinectServer");
+        options.put("carrier",carrier);
+        options.put("remote",remote);
         options.put("local",(name+"/client").c_str());
         options.put("verbosity",verbosity);
 
