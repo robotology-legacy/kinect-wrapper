@@ -17,8 +17,8 @@
 /**
 \defgroup kinectClientExample kinectClientExample
 
-Example module for the use of \ref kinectClientExample "Kinect 
-Wrapper Client". 
+Example module for the use of \ref kinectClientExample "Kinect
+Wrapper Client".
 
 \section intro_sec Description
 This simple module retrieves and display depth and rgb images, players information and the skeleton
@@ -47,6 +47,7 @@ It requires the \ref kinectServer running.
 Windows, Linux
 
 \author Ilaria Gori
+Modified by Tobias Fischer
 */
 
 #include <yarp/os/Network.h>
@@ -71,12 +72,12 @@ protected:
     ImageOf<PixelBgr> skeletonImage;
     IplImage* depthTmp;
     IplImage* rgbTmp;
-    
+
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelFloat> > depthPort;
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb> > imagePort;
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelBgr> > playersPort;
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelBgr> > skeletonPort;
-    
+
     bool showImages;
     Player joint;
     deque<Player> joints;
@@ -92,15 +93,15 @@ public:
         string remote=rf.check("remote",Value("kinectServer")).asString().c_str();
         string carrier=rf.check("carrier",Value("udp")).asString().c_str();
         showImages=(show=="true");
-        
+
         depthPort.open("/"+name+"/depthPort:o");
         imagePort.open("/"+name+"/imagePort:o");
         playersPort.open("/"+name+"/playersPort:o");
         skeletonPort.open("/"+name+"/skeletonPort:o");
 
         Property options;
-        options.put("carrier",carrier);
-        options.put("remote",remote);
+        options.put("carrier",carrier.c_str());
+        options.put("remote",remote.c_str());
         options.put("local",(name+"/client").c_str());
         options.put("verbosity",verbosity);
 
@@ -119,10 +120,10 @@ public:
         depthToDisplay.resize(depth_width,depth_height);
         playersImage.resize(depth_width,depth_height);
         skeletonImage.resize(depth_width,depth_height);
-        
+
         depthTmp=cvCreateImage(cvSize(depth_width,depth_height),IPL_DEPTH_32F,1);
         rgbTmp=cvCreateImage(cvSize(img_width,img_height),IPL_DEPTH_8U,3);
-        
+
         if (showImages)
         {
             cvNamedWindow("rgb",CV_WINDOW_AUTOSIZE);
@@ -174,36 +175,36 @@ public:
 
         client.getPlayersImage(players,playersImage);
         client.getDepthImage(depth,depthToDisplay);
-        
+
         if (depthPort.getOutputCount()>0)
         {
             depthPort.prepare()=depthToDisplay;
             depthPort.write();
         }
-        
+
         if (imagePort.getOutputCount()>0)
         {
             imagePort.prepare()=rgb;
             imagePort.write();
         }
-        
+
         if (playersPort.getOutputCount()>0)
         {
             playersPort.prepare()=playersImage;
             playersPort.write();
         }
-        
+
         if (skeletonPort.getOutputCount()>0)
         {
             skeletonPort.prepare()=skeletonImage;
             skeletonPort.write();
         }
-        
+
         int u=160;
         int v=120;
         yarp::sig::Vector point3D;
         client.get3DPoint(u,v,point3D);
-        
+
         fprintf(stdout, "%s\n", point3D.toString().c_str());
 
         if (showImages)
