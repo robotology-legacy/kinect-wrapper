@@ -1,6 +1,6 @@
 /* Copyright: (C) 2014 iCub Facility - Istituto Italiano di Tecnologia
- * Authors: Ilaria Gori
- * email:   ilaria.gori@iit.it
+ * Authors: Ilaria Gori, Tobias Fischer
+ * email:   ilaria.gori@iit.it, t.fischer@imperial.ac.uk
  * Permission is granted to copy, distribute, and/or modify this program
  * under the terms of the GNU General Public License, version 2 or any
  * later version published by the Free Software Foundation.
@@ -86,7 +86,7 @@ bool KinectWrapperServer::read(ConnectionReader &connection)
             }
             else
                 reply.addString(KINECT_TAGS_CMD_NACK);
-            }
+        }
     }
 
     ConnectionWriter *returnToSender=connection.getWriter();
@@ -221,9 +221,9 @@ void KinectWrapperServer::threadRelease()
     cvReleaseImage(&depthTmp);
     cvReleaseImage(&depthToShow);
 
-	if (opening)
+    if (opening)
     {
-    	driver->close();
+        driver->close();
         delete driver;
     }
 
@@ -762,7 +762,7 @@ void KinectWrapperServer::getSkeletonImage(const Player &player, yarp::sig::Imag
         if (iterator->second.u!=0 && iterator->second.v!=0)
             cvCircle(skeletonImage,cvPoint(iterator->second.u,iterator->second.v),5,CV_RGB(255,0,0),-1);
 
-   drawLimb(jointsMap,KINECT_TAGS_BODYPART_HEAD,KINECT_TAGS_BODYPART_SHOULDER_C);
+    drawLimb(jointsMap,KINECT_TAGS_BODYPART_HEAD,KINECT_TAGS_BODYPART_SHOULDER_C);
 
     if(useSDK)
     {

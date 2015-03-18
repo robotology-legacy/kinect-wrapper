@@ -1,6 +1,6 @@
 /* Copyright: (C) 2014 iCub Facility - Istituto Italiano di Tecnologia
- * Authors: Ilaria Gori
- * email:   ilaria.gori@iit.it
+ * Authors: Ilaria Gori, Tobias Fischer
+ * email:   ilaria.gori@iit.it, t.fischer@imperial.ac.uk
  * Permission is granted to copy, distribute, and/or modify this program
  * under the terms of the GNU General Public License, version 2 or any
  * later version published by the Free Software Foundation.
@@ -69,7 +69,7 @@ bool KinectWrapperClient::open(const Property &options)
 
     carrier=opt.check("carrier",Value("udp")).asString().c_str();
     verbosity=opt.check("verbosity",Value(0)).asInt();
-	noRpc = opt.check("noRPC");
+    noRpc = opt.check("noRPC");
 
     if (opt.check("remote"))
         remote=opt.find("remote").asString().c_str();
@@ -88,69 +88,69 @@ bool KinectWrapperClient::open(const Property &options)
     }
 
     depthPort.open(("/"+local+"/depth:i").c_str());
-	  bool ok = true;
-	  if (!noRpc)
-	  {
-		    rpc.open(("/" + local + "/rpc").c_str());
-		    ok &= Network::connect(rpc.getName().c_str(), ("/" + remote + "/rpc").c_str());
-	  }
-	  else
-	  {
-		    printf("noRPC option. Working with info/size from client options.\n");
-		    info = opt.check("info", Value(KINECT_TAGS_ALL_INFO)).asString();
-            img_width = opt.check("width", Value(320)).asInt();
-            img_height = opt.check("height", Value(240)).asInt();
-            depth_width = opt.check("depth_width", Value(320)).asInt();
-            depth_height = opt.check("depth_height", Value(240)).asInt();
-	  }
+    bool ok = true;
+    if (!noRpc)
+    {
+        rpc.open(("/" + local + "/rpc").c_str());
+        ok &= Network::connect(rpc.getName().c_str(), ("/" + remote + "/rpc").c_str());
+    }
+    else
+    {
+        printf("noRPC option. Working with info/size from client options.\n");
+        info = opt.check("info", Value(KINECT_TAGS_ALL_INFO)).asString();
+        img_width = opt.check("width", Value(320)).asInt();
+        img_height = opt.check("height", Value(240)).asInt();
+        depth_width = opt.check("depth_width", Value(320)).asInt();
+        depth_height = opt.check("depth_height", Value(240)).asInt();
+    }
 
-	  if (!noRpc)
-	  {
-		    if (ok)
-		    {
-			      Bottle cmd, reply;
-			      cmd.addString(KINECT_TAGS_CMD_PING);
+    if (!noRpc)
+    {
+        if (ok)
+        {
+            Bottle cmd, reply;
+            cmd.addString(KINECT_TAGS_CMD_PING);
 
-			      if (rpc.write(cmd, reply))
-			      {
-				        if (reply.size() > 0)
-				        {
-					          if (reply.get(0).asString() == KINECT_TAGS_CMD_ACK)
-					          {
-						            printMessage(1, "successfully connected with the server %s!\n", remote.c_str());
+            if (rpc.write(cmd, reply))
+            {
+                if (reply.size() > 0)
+                {
+                    if (reply.get(0).asString() == KINECT_TAGS_CMD_ACK)
+                    {
+                        printMessage(1, "successfully connected with the server %s!\n", remote.c_str());
 
-						            info = reply.get(1).asString().c_str();
-						            img_width = reply.get(2).asInt();
-						            img_height = reply.get(3).asInt();
-						            if (reply.get(4).asString() == KINECT_TAGS_SEATED_MODE)
-							            seatedMode = true;
-						            else
-							            seatedMode = false;
-						            if (reply.get(5).asString() == "drawAll")
-							            drawAll = true;
-						            else
-							            drawAll = false;
-                                    depth_width = reply.get(6).asInt();
-                                    depth_height = reply.get(7).asInt();
-					          }
-				        }
-			      }
-			      else
-			      {
-				        printMessage(1, "unable to get correct reply from the server %s!\n", remote.c_str());
-				        close();
+                        info = reply.get(1).asString().c_str();
+                        img_width = reply.get(2).asInt();
+                        img_height = reply.get(3).asInt();
+                        if (reply.get(4).asString() == KINECT_TAGS_SEATED_MODE)
+                            seatedMode = true;
+                        else
+                            seatedMode = false;
+                        if (reply.get(5).asString() == "drawAll")
+                            drawAll = true;
+                        else
+                            drawAll = false;
+                        depth_width = reply.get(6).asInt();
+                        depth_height = reply.get(7).asInt();
+                    }
+                }
+            }
+            else
+            {
+                printMessage(1, "unable to get correct reply from the server %s!\n", remote.c_str());
+                close();
 
-				        return false;
-			      }
-		    }
-		    else
-		    {
-			      printMessage(1, "unable to connect to the server %s!\n", remote.c_str());
-			      close();
+                return false;
+            }
+        }
+        else
+        {
+            printMessage(1, "unable to connect to the server %s!\n", remote.c_str());
+            close();
 
-			      return false;
-		    }
-	  }
+            return false;
+        }
+    }
 
     depthCV=cvCreateImageHeader(cvSize(depth_width,depth_height),IPL_DEPTH_16U,1);
     depthCVPl=cvCreateImageHeader(cvSize(depth_width,depth_height),IPL_DEPTH_16U,1);
@@ -195,8 +195,8 @@ void KinectWrapperClient::close()
             rpc.interrupt();
 
         depthPort.close();
-		    if (!noRpc)
-			      rpc.close();
+        if (!noRpc)
+            rpc.close();
 
         if (info==KINECT_TAGS_ALL_INFO || info==KINECT_TAGS_DEPTH_JOINTS)
         {
@@ -707,7 +707,7 @@ void KinectWrapperClient::getSkeletonImage(const std::deque<Player> &players, ya
             if (iterator->second.u!=0 && iterator->second.v!=0 && iterator->first!=KINECT_TAGS_BODYPART_COM)
                 cvCircle(skeletonImage,cvPoint(iterator->second.u,iterator->second.v),5,CV_RGB(255,0,0),-1);
 
-       drawLimb(jointsMap,KINECT_TAGS_BODYPART_HEAD,KINECT_TAGS_BODYPART_SHOULDER_C);
+        drawLimb(jointsMap,KINECT_TAGS_BODYPART_HEAD,KINECT_TAGS_BODYPART_SHOULDER_C);
 
         if(drawAll)
         {

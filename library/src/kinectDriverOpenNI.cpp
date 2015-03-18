@@ -1,6 +1,6 @@
 /* Copyright: (C) 2014 iCub Facility - Istituto Italiano di Tecnologia
- * Authors: Ilaria Gori
- * email:   ilaria.gori@iit.it
+ * Authors: Ilaria Gori, Tobias Fischer
+ * email:   ilaria.gori@iit.it, t.fischer@imperial.ac.uk
  * Permission is granted to copy, distribute, and/or modify this program
  * under the terms of the GNU General Public License, version 2 or any
  * later version published by the Free Software Foundation.
@@ -227,7 +227,7 @@ bool KinectDriverOpenNI::readDepth(ImageOf<PixelMono16> &depth, double &timestam
             finalValue|=((depth<<3)&0XFFF8);
             finalValue|=(player&0X0007);
             //if (x==320 && y==240)
-             //   fprintf(stdout, "%d %d\n", ((finalValue&0XFFF8)>>3), finalValue&0X0007);
+            //   fprintf(stdout, "%d %d\n", ((finalValue&0XFFF8)>>3), finalValue&0X0007);
             //We associate the depth to the first 13 bits, using the last 3 for the player identification
             depthMat->data.s[y * this->depth_width_sensor + x ]=finalValue;
         }
@@ -312,7 +312,7 @@ bool KinectDriverOpenNI::readSkeleton(Bottle *skeleton, double &timestamp)
                         else
                         {
                             limb.addInt((int)p.X);
-                            limb.addInt((int)p.Y);                           
+                            limb.addInt((int)p.Y);
                         }
                         //OpenNI returns millimiters, we want meters
                         limb.addDouble(joint.position.X/1000);
@@ -349,7 +349,7 @@ bool KinectDriverOpenNI::readSkeleton(Bottle *skeleton, double &timestamp)
             //OPC; if the confidence of all the joints is lower than 0.5, we assume that the tracker actually is not
             //tracking anything, so the only joint written is CoM. In this case we do not send skeleton information.
             if((bones.get(0).asList()->get(1).asList()->get(0).asString()!=KINECT_TAGS_BODYPART_COM));
-                *skeleton=bones;
+            *skeleton=bones;
         }
         return true;
     }
@@ -396,78 +396,78 @@ string KinectDriverOpenNI::jointNameAssociation(XnSkeletonJoint joint)
     string jointName;
     switch (joint)
     {
-        case XN_SKEL_HEAD:
-            jointName=KINECT_TAGS_BODYPART_HEAD;
-            break;
-        case XN_SKEL_LEFT_HAND:
-            jointName=KINECT_TAGS_BODYPART_HAND_L;
-            break;
-        case XN_SKEL_RIGHT_HAND:
-            jointName=KINECT_TAGS_BODYPART_HAND_R;
-            break;
-        case XN_SKEL_LEFT_WRIST:
-            jointName=KINECT_TAGS_BODYPART_WRIST_L;
-            break;
-        case XN_SKEL_RIGHT_WRIST:
-            jointName=KINECT_TAGS_BODYPART_WRIST_R;
-            break;
-        case XN_SKEL_LEFT_ELBOW:
-            jointName=KINECT_TAGS_BODYPART_ELBOW_L;
-            break;
-        case XN_SKEL_RIGHT_ELBOW:
-            jointName=KINECT_TAGS_BODYPART_ELBOW_R;
-            break;
-        case XN_SKEL_NECK:
-            jointName=KINECT_TAGS_BODYPART_SHOULDER_C;
-            break;
-        case XN_SKEL_LEFT_SHOULDER:
-            jointName=KINECT_TAGS_BODYPART_SHOULDER_L;
-            break;
-        case XN_SKEL_RIGHT_SHOULDER:
-            jointName=KINECT_TAGS_BODYPART_SHOULDER_R;
-            break;
-        case XN_SKEL_TORSO:
-            jointName=KINECT_TAGS_BODYPART_SPINE;
-            break;
-        case XN_SKEL_WAIST:
-            jointName=KINECT_TAGS_BODYPART_HIP_C;
-            break;
-        case XN_SKEL_LEFT_HIP:
-            jointName=KINECT_TAGS_BODYPART_HIP_L;
-            break;
-        case XN_SKEL_RIGHT_HIP:
-            jointName=KINECT_TAGS_BODYPART_HIP_R;
-            break;
-        case XN_SKEL_LEFT_KNEE:
-            jointName=KINECT_TAGS_BODYPART_KNEE_L;
-            break;
-        case XN_SKEL_RIGHT_KNEE:
-            jointName=KINECT_TAGS_BODYPART_KNEE_R;
-            break;
-        case XN_SKEL_LEFT_ANKLE :
-            jointName=KINECT_TAGS_BODYPART_ANKLE_L;
-            break;
-        case XN_SKEL_RIGHT_ANKLE :
-            jointName=KINECT_TAGS_BODYPART_ANKLE_R;
-            break;
-        case XN_SKEL_LEFT_FOOT:
-            jointName=KINECT_TAGS_BODYPART_FOOT_L;
-            break;
-        case XN_SKEL_RIGHT_FOOT:
-            jointName=KINECT_TAGS_BODYPART_FOOT_R;
-            break;
-        case XN_SKEL_LEFT_COLLAR:
-            jointName=KINECT_TAGS_BODYPART_COLLAR_L;
-            break;
-        case XN_SKEL_RIGHT_COLLAR:
-            jointName=KINECT_TAGS_BODYPART_COLLAR_R;
-            break;
-        case XN_SKEL_LEFT_FINGERTIP:
-            jointName=KINECT_TAGS_BODYPART_FT_L;
-            break;
-        case XN_SKEL_RIGHT_FINGERTIP:
-            jointName=KINECT_TAGS_BODYPART_FT_R;
-            break;
+    case XN_SKEL_HEAD:
+        jointName=KINECT_TAGS_BODYPART_HEAD;
+        break;
+    case XN_SKEL_LEFT_HAND:
+        jointName=KINECT_TAGS_BODYPART_HAND_L;
+        break;
+    case XN_SKEL_RIGHT_HAND:
+        jointName=KINECT_TAGS_BODYPART_HAND_R;
+        break;
+    case XN_SKEL_LEFT_WRIST:
+        jointName=KINECT_TAGS_BODYPART_WRIST_L;
+        break;
+    case XN_SKEL_RIGHT_WRIST:
+        jointName=KINECT_TAGS_BODYPART_WRIST_R;
+        break;
+    case XN_SKEL_LEFT_ELBOW:
+        jointName=KINECT_TAGS_BODYPART_ELBOW_L;
+        break;
+    case XN_SKEL_RIGHT_ELBOW:
+        jointName=KINECT_TAGS_BODYPART_ELBOW_R;
+        break;
+    case XN_SKEL_NECK:
+        jointName=KINECT_TAGS_BODYPART_SHOULDER_C;
+        break;
+    case XN_SKEL_LEFT_SHOULDER:
+        jointName=KINECT_TAGS_BODYPART_SHOULDER_L;
+        break;
+    case XN_SKEL_RIGHT_SHOULDER:
+        jointName=KINECT_TAGS_BODYPART_SHOULDER_R;
+        break;
+    case XN_SKEL_TORSO:
+        jointName=KINECT_TAGS_BODYPART_SPINE;
+        break;
+    case XN_SKEL_WAIST:
+        jointName=KINECT_TAGS_BODYPART_HIP_C;
+        break;
+    case XN_SKEL_LEFT_HIP:
+        jointName=KINECT_TAGS_BODYPART_HIP_L;
+        break;
+    case XN_SKEL_RIGHT_HIP:
+        jointName=KINECT_TAGS_BODYPART_HIP_R;
+        break;
+    case XN_SKEL_LEFT_KNEE:
+        jointName=KINECT_TAGS_BODYPART_KNEE_L;
+        break;
+    case XN_SKEL_RIGHT_KNEE:
+        jointName=KINECT_TAGS_BODYPART_KNEE_R;
+        break;
+    case XN_SKEL_LEFT_ANKLE :
+        jointName=KINECT_TAGS_BODYPART_ANKLE_L;
+        break;
+    case XN_SKEL_RIGHT_ANKLE :
+        jointName=KINECT_TAGS_BODYPART_ANKLE_R;
+        break;
+    case XN_SKEL_LEFT_FOOT:
+        jointName=KINECT_TAGS_BODYPART_FOOT_L;
+        break;
+    case XN_SKEL_RIGHT_FOOT:
+        jointName=KINECT_TAGS_BODYPART_FOOT_R;
+        break;
+    case XN_SKEL_LEFT_COLLAR:
+        jointName=KINECT_TAGS_BODYPART_COLLAR_L;
+        break;
+    case XN_SKEL_RIGHT_COLLAR:
+        jointName=KINECT_TAGS_BODYPART_COLLAR_R;
+        break;
+    case XN_SKEL_LEFT_FINGERTIP:
+        jointName=KINECT_TAGS_BODYPART_FT_L;
+        break;
+    case XN_SKEL_RIGHT_FINGERTIP:
+        jointName=KINECT_TAGS_BODYPART_FT_R;
+        break;
     }
     return jointName;
 }

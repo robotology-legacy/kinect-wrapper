@@ -1,6 +1,6 @@
 /* Copyright: (C) 2014 iCub Facility - Istituto Italiano di Tecnologia
- * Authors: Ilaria Gori
- * email:   ilaria.gori@iit.it
+ * Authors: Ilaria Gori, Tobias Fischer
+ * email:   ilaria.gori@iit.it, t.fischer@imperial.ac.uk
  * Permission is granted to copy, distribute, and/or modify this program
  * under the terms of the GNU General Public License, version 2 or any
  * later version published by the Free Software Foundation.
