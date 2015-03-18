@@ -1,6 +1,6 @@
 /* Copyright: (C) 2014 iCub Facility - Istituto Italiano di Tecnologia
- * Authors: Ilaria Gori
- * email:   ilaria.gori@iit.it
+ * Authors: Ilaria Gori, Tobias Fischer
+ * email:   ilaria.gori@iit.it, t.fischer@imperial.ac.uk
  * Permission is granted to copy, distribute, and/or modify this program
  * under the terms of the GNU General Public License, version 2 or any
  * later version published by the Free Software Foundation.
@@ -26,18 +26,18 @@
 #include <kinectWrapper/kinectWrapper.h>
 
 #ifdef __USE_SDK__
-    #include <kinectWrapper/kinectDriverSDK.h>
+#include <kinectWrapper/kinectDriverSDK.h>
 #endif
 
 #ifdef __USE_OPENNI__
-    #include <kinectWrapper/kinectDriverOpenNI.h>
+#include <kinectWrapper/kinectDriverOpenNI.h>
 #endif
 
 namespace kinectWrapper
 {
 class KinectWrapperServer : public KinectWrapper,
-                  public yarp::os::RateThread,
-                  public yarp::os::PortReader
+        public yarp::os::RateThread,
+        public yarp::os::PortReader
 {
 protected:
     unsigned short* buf;
@@ -51,6 +51,8 @@ protected:
     int verbosity;
     int img_width;
     int img_height;
+    int depth_width;
+    int depth_height;
     yarp::os::Stamp tsD,tsI,tsS;
     double timestampD,timestampI,timestampS;
     std::string name;

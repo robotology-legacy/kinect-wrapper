@@ -1,6 +1,6 @@
 /* Copyright: (C) 2014 iCub Facility - Istituto Italiano di Tecnologia
- * Authors: Ilaria Gori
- * email:   ilaria.gori@iit.it
+ * Authors: Ilaria Gori, Tobias Fischer
+ * email:   ilaria.gori@iit.it, t.fischer@imperial.ac.uk
  * Permission is granted to copy, distribute, and/or modify this program
  * under the terms of the GNU General Public License, version 2 or any
  * later version published by the Free Software Foundation.
@@ -89,29 +89,29 @@ bool KinectDriverOpenNI::initialize(Property &opt)
     this->seatedMode=false;
     this->img_width=opt.check("img_width",Value(320)).asInt();
     this->img_height=opt.check("img_height",Value(240)).asInt();
+    this->depth_width=opt.check("depth_width",Value(320)).asInt();
+    this->depth_height=opt.check("depth_height",Value(240)).asInt();
     this->requireRemapping=opt.check("remap");
 
-    if (opt.find("device").asString()=="kinect")
-    {
-        device=KINECT_TAGS_DEVICE_KINECT;
-        this->def_image_width=640;
-        this->def_image_height=480;
-        this->def_depth_width=640;
-        this->def_depth_height=480;
-    }
-    else
-    {
-        device=KINECT_TAGS_DEVICE_XTION;
-        this->def_image_width=320;
-        this->def_image_height=240;
-        this->def_depth_width=320;
-        this->def_depth_height=240;
+    cout << "Resolution RGB: " << img_width << "x" << img_height << endl;
+    cout << "Resolution Depth: " << depth_width << "x" << depth_height << endl;
+
+    if (opt.find("device").asString()=="kinect") {
+        this->depth_width_sensor = 640;
+        this->depth_height_sensor = 480;
+        this->img_width_sensor = 640;
+        this->img_height_sensor = 480;
+    } else {
+        this->depth_width_sensor = depth_width;
+        this->depth_height_sensor = depth_height;
+        this->img_width_sensor = img_width;
+        this->img_height_sensor = img_height;
     }
 
-    depthTmp=cvCreateImage(cvSize(def_depth_width,def_depth_height),IPL_DEPTH_16U,1);
-    depthImage=cvCreateImage(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_16U,1);
-    rgb_big=cvCreateImageHeader(cvSize(img_width,img_height),IPL_DEPTH_8U,3);
-    depthMat = cvCreateMat(def_depth_height,def_depth_width,CV_16UC1);
+    depthTmp=cvCreateImage(cvSize(depth_width_sensor,depth_height_sensor),IPL_DEPTH_16U,1);
+    depthImage=cvCreateImage(cvSize(depth_width,depth_height),IPL_DEPTH_16U,1);
+    rgb_big=cvCreateImageHeader(cvSize(img_width_sensor,img_height_sensor),IPL_DEPTH_8U,3);
+    depthMat = cvCreateMat(depth_height_sensor,depth_width_sensor,CV_16UC1);
 
     XnStatus nRetVal = XN_STATUS_OK;
     nRetVal = context.Init();
@@ -125,8 +125,8 @@ bool KinectDriverOpenNI::initialize(Property &opt)
         return false;
 
     XnMapOutputMode mapMode;
-    mapMode.nXRes = this->def_depth_width;
-    mapMode.nYRes = this->def_depth_height;
+    mapMode.nXRes = this->depth_width_sensor;
+    mapMode.nYRes = this->depth_height_sensor;
     mapMode.nFPS = 30;
     nRetVal = depthGenerator.SetMapOutputMode(mapMode);
     if (!testRetVal(nRetVal, "Depth Output Setting"))
@@ -139,8 +139,8 @@ bool KinectDriverOpenNI::initialize(Property &opt)
             return false;
 
         XnMapOutputMode mapModeImage;
-        mapModeImage.nXRes = this->img_width;
-        mapModeImage.nYRes = this->img_height;
+        mapModeImage.nXRes = this->img_width_sensor;
+        mapModeImage.nYRes = this->img_height_sensor;
         mapModeImage.nFPS = 30;
         nRetVal = imageGenerator.SetMapOutputMode(mapModeImage);
         if(!testRetVal(nRetVal, "Image Output Setting"))
@@ -217,29 +217,29 @@ bool KinectDriverOpenNI::readDepth(ImageOf<PixelMono16> &depth, double &timestam
     SceneMetaData smd;
     userGenerator.GetUserPixels(0,smd);
 
-    for (int y=0; y<this->def_depth_height; y++)
+    for (int y=0; y<this->depth_height_sensor; y++)
     {
-        for(int x=0;x<this->def_depth_width;x++)
+        for(int x=0;x<this->depth_width_sensor;x++)
         {
-            int player=(smd[y * this->def_depth_width + x]);
-            int depth=(pDepthMap[y * this->def_depth_width + x]);
+            int player=(smd[y * this->depth_width_sensor + x]);
+            int depth=(pDepthMap[y * this->depth_width_sensor + x]);
             int finalValue=0;
             finalValue|=((depth<<3)&0XFFF8);
             finalValue|=(player&0X0007);
             //if (x==320 && y==240)
-             //   fprintf(stdout, "%d %d\n", ((finalValue&0XFFF8)>>3), finalValue&0X0007);
+            //   fprintf(stdout, "%d %d\n", ((finalValue&0XFFF8)>>3), finalValue&0X0007);
             //We associate the depth to the first 13 bits, using the last 3 for the player identification
-            depthMat->data.s[y * this->def_depth_width + x ]=finalValue;
+            depthMat->data.s[y * this->depth_width_sensor + x ]=finalValue;
         }
     }
 
-    if (device==KINECT_TAGS_DEVICE_KINECT)
+    if(depth_width == 320 && depth_width_sensor == 640)
     {
         cvGetImage(depthMat,depthTmp);
         resizeImage(depthTmp,depthImage);
-    }
-    else
+    } else {
         cvGetImage(depthMat,depthImage);
+    }
     depth.wrapIplImage(depthImage);
 
     return true;
@@ -250,7 +250,7 @@ bool KinectDriverOpenNI::readRgb(ImageOf<PixelRgb> &rgb, double &timestamp)
 {
     const XnRGB24Pixel* pImage = imageGenerator.GetRGB24ImageMap();
     XnRGB24Pixel* ucpImage = const_cast<XnRGB24Pixel*> (pImage);
-    cvSetData(rgb_big,ucpImage,this->img_width*3);
+    cvSetData(rgb_big,ucpImage,this->img_width_sensor*3);
     cvResize(rgb_big,(IplImage*)rgb.getIplImage());
     int ts=(int)imageGenerator.GetTimestamp();
     timestamp=(double)ts/1000.0;
@@ -304,7 +304,7 @@ bool KinectDriverOpenNI::readSkeleton(Bottle *skeleton, double &timestamp)
                         //kinect with openni does not support 320x240 depth resolution, but we
                         //need to send 320x240 depth images to avoid bandwidth problems, so
                         //the x and y coordinates are divided by 2 to fit in the 320x240 image.
-                        if (device==KINECT_TAGS_DEVICE_KINECT)
+                        if(depth_width == 320 && depth_width_sensor == 640)
                         {
                             limb.addInt((int)p.X/2);
                             limb.addInt((int)p.Y/2);
@@ -312,7 +312,7 @@ bool KinectDriverOpenNI::readSkeleton(Bottle *skeleton, double &timestamp)
                         else
                         {
                             limb.addInt((int)p.X);
-                            limb.addInt((int)p.Y);                           
+                            limb.addInt((int)p.Y);
                         }
                         //OpenNI returns millimiters, we want meters
                         limb.addDouble(joint.position.X/1000);
@@ -349,7 +349,7 @@ bool KinectDriverOpenNI::readSkeleton(Bottle *skeleton, double &timestamp)
             //OPC; if the confidence of all the joints is lower than 0.5, we assume that the tracker actually is not
             //tracking anything, so the only joint written is CoM. In this case we do not send skeleton information.
             if((bones.get(0).asList()->get(1).asList()->get(0).asString()!=KINECT_TAGS_BODYPART_COM));
-                *skeleton=bones;
+            *skeleton=bones;
         }
         return true;
     }
@@ -396,78 +396,78 @@ string KinectDriverOpenNI::jointNameAssociation(XnSkeletonJoint joint)
     string jointName;
     switch (joint)
     {
-        case XN_SKEL_HEAD:
-            jointName=KINECT_TAGS_BODYPART_HEAD;
-            break;
-        case XN_SKEL_LEFT_HAND:
-            jointName=KINECT_TAGS_BODYPART_HAND_L;
-            break;
-        case XN_SKEL_RIGHT_HAND:
-            jointName=KINECT_TAGS_BODYPART_HAND_R;
-            break;
-        case XN_SKEL_LEFT_WRIST:
-            jointName=KINECT_TAGS_BODYPART_WRIST_L;
-            break;
-        case XN_SKEL_RIGHT_WRIST:
-            jointName=KINECT_TAGS_BODYPART_WRIST_R;
-            break;
-        case XN_SKEL_LEFT_ELBOW:
-            jointName=KINECT_TAGS_BODYPART_ELBOW_L;
-            break;
-        case XN_SKEL_RIGHT_ELBOW:
-            jointName=KINECT_TAGS_BODYPART_ELBOW_R;
-            break;
-        case XN_SKEL_NECK:
-            jointName=KINECT_TAGS_BODYPART_SHOULDER_C;
-            break;
-        case XN_SKEL_LEFT_SHOULDER:
-            jointName=KINECT_TAGS_BODYPART_SHOULDER_L;
-            break;
-        case XN_SKEL_RIGHT_SHOULDER:
-            jointName=KINECT_TAGS_BODYPART_SHOULDER_R;
-            break;
-        case XN_SKEL_TORSO:
-            jointName=KINECT_TAGS_BODYPART_SPINE;
-            break;
-        case XN_SKEL_WAIST:
-            jointName=KINECT_TAGS_BODYPART_HIP_C;
-            break;
-        case XN_SKEL_LEFT_HIP:
-            jointName=KINECT_TAGS_BODYPART_HIP_L;
-            break;
-        case XN_SKEL_RIGHT_HIP:
-            jointName=KINECT_TAGS_BODYPART_HIP_R;
-            break;
-        case XN_SKEL_LEFT_KNEE:
-            jointName=KINECT_TAGS_BODYPART_KNEE_L;
-            break;
-        case XN_SKEL_RIGHT_KNEE:
-            jointName=KINECT_TAGS_BODYPART_KNEE_R;
-            break;
-        case XN_SKEL_LEFT_ANKLE :
-            jointName=KINECT_TAGS_BODYPART_ANKLE_L;
-            break;
-        case XN_SKEL_RIGHT_ANKLE :
-            jointName=KINECT_TAGS_BODYPART_ANKLE_R;
-            break;
-        case XN_SKEL_LEFT_FOOT:
-            jointName=KINECT_TAGS_BODYPART_FOOT_L;
-            break;
-        case XN_SKEL_RIGHT_FOOT:
-            jointName=KINECT_TAGS_BODYPART_FOOT_R;
-            break;
-        case XN_SKEL_LEFT_COLLAR:
-            jointName=KINECT_TAGS_BODYPART_COLLAR_L;
-            break;
-        case XN_SKEL_RIGHT_COLLAR:
-            jointName=KINECT_TAGS_BODYPART_COLLAR_R;
-            break;
-        case XN_SKEL_LEFT_FINGERTIP:
-            jointName=KINECT_TAGS_BODYPART_FT_L;
-            break;
-        case XN_SKEL_RIGHT_FINGERTIP:
-            jointName=KINECT_TAGS_BODYPART_FT_R;
-            break;
+    case XN_SKEL_HEAD:
+        jointName=KINECT_TAGS_BODYPART_HEAD;
+        break;
+    case XN_SKEL_LEFT_HAND:
+        jointName=KINECT_TAGS_BODYPART_HAND_L;
+        break;
+    case XN_SKEL_RIGHT_HAND:
+        jointName=KINECT_TAGS_BODYPART_HAND_R;
+        break;
+    case XN_SKEL_LEFT_WRIST:
+        jointName=KINECT_TAGS_BODYPART_WRIST_L;
+        break;
+    case XN_SKEL_RIGHT_WRIST:
+        jointName=KINECT_TAGS_BODYPART_WRIST_R;
+        break;
+    case XN_SKEL_LEFT_ELBOW:
+        jointName=KINECT_TAGS_BODYPART_ELBOW_L;
+        break;
+    case XN_SKEL_RIGHT_ELBOW:
+        jointName=KINECT_TAGS_BODYPART_ELBOW_R;
+        break;
+    case XN_SKEL_NECK:
+        jointName=KINECT_TAGS_BODYPART_SHOULDER_C;
+        break;
+    case XN_SKEL_LEFT_SHOULDER:
+        jointName=KINECT_TAGS_BODYPART_SHOULDER_L;
+        break;
+    case XN_SKEL_RIGHT_SHOULDER:
+        jointName=KINECT_TAGS_BODYPART_SHOULDER_R;
+        break;
+    case XN_SKEL_TORSO:
+        jointName=KINECT_TAGS_BODYPART_SPINE;
+        break;
+    case XN_SKEL_WAIST:
+        jointName=KINECT_TAGS_BODYPART_HIP_C;
+        break;
+    case XN_SKEL_LEFT_HIP:
+        jointName=KINECT_TAGS_BODYPART_HIP_L;
+        break;
+    case XN_SKEL_RIGHT_HIP:
+        jointName=KINECT_TAGS_BODYPART_HIP_R;
+        break;
+    case XN_SKEL_LEFT_KNEE:
+        jointName=KINECT_TAGS_BODYPART_KNEE_L;
+        break;
+    case XN_SKEL_RIGHT_KNEE:
+        jointName=KINECT_TAGS_BODYPART_KNEE_R;
+        break;
+    case XN_SKEL_LEFT_ANKLE :
+        jointName=KINECT_TAGS_BODYPART_ANKLE_L;
+        break;
+    case XN_SKEL_RIGHT_ANKLE :
+        jointName=KINECT_TAGS_BODYPART_ANKLE_R;
+        break;
+    case XN_SKEL_LEFT_FOOT:
+        jointName=KINECT_TAGS_BODYPART_FOOT_L;
+        break;
+    case XN_SKEL_RIGHT_FOOT:
+        jointName=KINECT_TAGS_BODYPART_FOOT_R;
+        break;
+    case XN_SKEL_LEFT_COLLAR:
+        jointName=KINECT_TAGS_BODYPART_COLLAR_L;
+        break;
+    case XN_SKEL_RIGHT_COLLAR:
+        jointName=KINECT_TAGS_BODYPART_COLLAR_R;
+        break;
+    case XN_SKEL_LEFT_FINGERTIP:
+        jointName=KINECT_TAGS_BODYPART_FT_L;
+        break;
+    case XN_SKEL_RIGHT_FINGERTIP:
+        jointName=KINECT_TAGS_BODYPART_FT_R;
+        break;
     }
     return jointName;
 }
@@ -481,7 +481,7 @@ bool KinectDriverOpenNI::get3DPoint(int u, int v, yarp::sig::Vector &point3D)
     int newV=v;
     //request arrives with respect to the 320x240 image, but the depth by default
     // is 640x480 (we resize it before send it to the server)
-    if (device==KINECT_TAGS_DEVICE_KINECT)
+    if(depth_width == 320 && depth_width_sensor == 640)
     {
         newU=u*2;
         newV=v*2;
@@ -489,7 +489,7 @@ bool KinectDriverOpenNI::get3DPoint(int u, int v, yarp::sig::Vector &point3D)
 
     p2D.X = newU;
     p2D.Y = newV;
-    p2D.Z = pDepthMap[newV*this->def_depth_width+newU];
+    p2D.Z = pDepthMap[newV*this->depth_width_sensor+newU];
     depthGenerator.ConvertProjectiveToRealWorld(1, &p2D, &p3D);
 
     //We provide the 3D point in meters
@@ -527,7 +527,11 @@ bool KinectDriverOpenNI::getFocalLength(double &focallength)
         return false;
 
     // pixel size @ VGA = pixel size @ SXGA x 2
-    pixelSize *= 4.0; // in mm
+    if(depth_width == 640) {
+        pixelSize *= 2.0;
+    } else {
+        pixelSize *= 4.0; // in mm
+    }
 
     focallength = (double)zeroPlanDistance / (double)pixelSize;
 

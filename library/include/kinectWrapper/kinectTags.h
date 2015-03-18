@@ -1,6 +1,6 @@
 /* Copyright: (C) 2014 iCub Facility - Istituto Italiano di Tecnologia
- * Authors: Ilaria Gori
- * email:   ilaria.gori@iit.it
+ * Authors: Ilaria Gori, Tobias Fischer
+ * email:   ilaria.gori@iit.it, t.fischer@imperial.ac.uk
  * Permission is granted to copy, distribute, and/or modify this program
  * under the terms of the GNU General Public License, version 2 or any
  * later version published by the Free Software Foundation.
@@ -17,13 +17,8 @@
 #ifndef __KINECT_TAGS_H__
 #define __KINECT_TAGS_H__
 
-#define KINECT_TAGS_DEPTH_WIDTH             320
-#define KINECT_TAGS_DEPTH_HEIGHT            240
-
 #define KINECT_TAGS_N_JOINTS                20
 #define KINECT_TAGS_MAX_USERS               15
-#define KINECT_TAGS_DEVICE_KINECT           0
-#define KINECT_TAGS_DEVICE_XTION            1
 
 #define KINECT_TAGS_ALL_INFO                "all_info"
 #define KINECT_TAGS_DEPTH                   "depth"
