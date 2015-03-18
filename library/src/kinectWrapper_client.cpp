@@ -210,6 +210,11 @@ void KinectWrapperClient::close()
             imagePort.close();
         }
 
+        delete[] buf;
+        delete[] bufPl;
+        delete[] bufF;
+        delete[] bufFPl;
+
         cvReleaseImageHeader(&depthCV);
         cvReleaseImageHeader(&depthCVPl);
         cvReleaseImageHeader(&depthFCV);
