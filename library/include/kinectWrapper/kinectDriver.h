@@ -64,11 +64,17 @@ public:
     *    true, otherwise will be false. It can be true only if Microsoft SDK is used.
     *    If it is true, only upper body joints are tracked.
     *
-    * \b image_width <int>: example (image_width 320), specifies the
+    * \b img_width <int>: example (img_width 320), specifies the
     *    width of the rgb image to send.
     *
-    * \b image_height <int>: example (image_height 240), specifies the
+    * \b img_height <int>: example (img_height 240), specifies the
     *    height of the rgb image to send.
+    *
+    * \b depth_width <int>: example (depth_width 320), specifies the
+    *    width of the depth image to send. only for OpenNI driver.
+    *
+    * \b depth_height <int>: example (depth_height 240), specifies the
+    *    height of the depth image to send. only for OpenNI driver.
     *
     * @return true/false if successful/failed.
     */
