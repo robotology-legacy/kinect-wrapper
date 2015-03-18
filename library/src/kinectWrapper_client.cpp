@@ -87,15 +87,6 @@ bool KinectWrapperClient::open(const Property &options)
         return false;
     }
 
-    depthCV=cvCreateImageHeader(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_16U,1);
-    depthCVPl=cvCreateImageHeader(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_16U,1);
-    depthFCV=cvCreateImageHeader(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_32F,1);
-    depthFCVPl=cvCreateImageHeader(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_32F,1);
-    playersImage=cvCreateImage(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_8U,3);
-    skeletonImage=cvCreateImage(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_8U,3);
-    depthTmp=cvCreateImage(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_16U,1);
-    depthToShow=cvCreateImage(cvSize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT),IPL_DEPTH_32F,1);
-
     depthPort.open(("/"+local+"/depth:i").c_str());
 	  bool ok = true;
 	  if (!noRpc)
@@ -107,8 +98,10 @@ bool KinectWrapperClient::open(const Property &options)
 	  {
 		    printf("noRPC option. Working with info/size from client options.\n");
 		    info = opt.check("info", Value(KINECT_TAGS_ALL_INFO)).asString();
-		    img_width = opt.check("width", Value(KINECT_TAGS_DEPTH_WIDTH)).asInt();
-		    img_height = opt.check("height", Value(KINECT_TAGS_DEPTH_WIDTH)).asInt();
+            img_width = opt.check("width", Value(320)).asInt();
+            img_height = opt.check("height", Value(240)).asInt();
+            depth_width = opt.check("depth_width", Value(320)).asInt();
+            depth_height = opt.check("depth_height", Value(240)).asInt();
 	  }
 
 	  if (!noRpc)
@@ -137,6 +130,8 @@ bool KinectWrapperClient::open(const Property &options)
 							            drawAll = true;
 						            else
 							            drawAll = false;
+                                    depth_width = reply.get(6).asInt();
+                                    depth_height = reply.get(7).asInt();
 					          }
 				        }
 			      }
@@ -156,7 +151,22 @@ bool KinectWrapperClient::open(const Property &options)
 			      return false;
 		    }
 	  }
-	  ok = true;
+
+    depthCV=cvCreateImageHeader(cvSize(depth_width,depth_height),IPL_DEPTH_16U,1);
+    depthCVPl=cvCreateImageHeader(cvSize(depth_width,depth_height),IPL_DEPTH_16U,1);
+    depthFCV=cvCreateImageHeader(cvSize(depth_width,depth_height),IPL_DEPTH_32F,1);
+    depthFCVPl=cvCreateImageHeader(cvSize(depth_width,depth_height),IPL_DEPTH_32F,1);
+    playersImage=cvCreateImage(cvSize(depth_width,depth_height),IPL_DEPTH_8U,3);
+    skeletonImage=cvCreateImage(cvSize(depth_width,depth_height),IPL_DEPTH_8U,3);
+    depthTmp=cvCreateImage(cvSize(depth_width,depth_height),IPL_DEPTH_16U,1);
+    depthToShow=cvCreateImage(cvSize(depth_width,depth_height),IPL_DEPTH_32F,1);
+
+    buf=new unsigned short[depth_width*depth_height];
+    bufPl=new unsigned short[depth_width*depth_height];
+    bufF=new float[depth_width*depth_height];
+    bufFPl=new float[depth_width*depth_height];
+
+    ok = true;
     ok&=Network::connect(("/"+remote+"/depth:o").c_str(),depthPort.getName().c_str(),carrier.c_str());
     if (info==KINECT_TAGS_ALL_INFO || info==KINECT_TAGS_DEPTH_RGB || info==KINECT_TAGS_DEPTH_RGB_PLAYERS)
     {
@@ -219,7 +229,7 @@ void KinectWrapperClient::close()
 /************************************************************************/
 bool KinectWrapperClient::getDepth(ImageOf<PixelMono16> &depthIm, double *timestamp)
 {
-    depthIm.resize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT);
+    depthIm.resize(depth_width,depth_height);
     if (opening)
     {
         ImageOf<PixelMono16>* img;
@@ -235,7 +245,7 @@ bool KinectWrapperClient::getDepth(ImageOf<PixelMono16> &depthIm, double *timest
                 unsigned short realDepth = (pBuff[i]&0xFFF8)>>3;
                 buf[i]=realDepth;
             }
-            cvSetData(depthCV,buf,KINECT_TAGS_DEPTH_WIDTH*2);
+            cvSetData(depthCV,buf,depth_width*2);
             depthIm.wrapIplImage(depthCV);
             if (timestamp!=NULL)
                 timestamp=&timestampD;
@@ -254,7 +264,7 @@ bool KinectWrapperClient::getDepth(ImageOf<PixelMono16> &depthIm, double *timest
 /************************************************************************/
 bool KinectWrapperClient::getDepth(ImageOf<PixelFloat> &depthIm, double *timestamp)
 {
-    depthIm.resize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT);
+    depthIm.resize(depth_width,depth_height);
     if (opening)
     {
         ImageOf<PixelMono16>* img;
@@ -271,7 +281,7 @@ bool KinectWrapperClient::getDepth(ImageOf<PixelFloat> &depthIm, double *timesta
                 float scale=((1.0*realDepth/0xFFF8));
                 bufF[i]=scale;
             }
-            cvSetData(depthFCV,bufF,KINECT_TAGS_DEPTH_WIDTH*4);
+            cvSetData(depthFCV,bufF,depth_width*4);
             depthIm.wrapIplImage(depthFCV);
             if (timestamp!=NULL)
                 timestamp=&timestampD;
@@ -328,7 +338,7 @@ bool KinectWrapperClient::getPlayers(Matrix &players, double *timestamp)
     {
         if (info==KINECT_TAGS_ALL_INFO || info==KINECT_TAGS_DEPTH_RGB_PLAYERS || info==KINECT_TAGS_DEPTH_PLAYERS)
         {
-            players.resize(KINECT_TAGS_DEPTH_HEIGHT,KINECT_TAGS_DEPTH_WIDTH);
+            players.resize(depth_height,depth_width);
             ImageOf<PixelMono16>* img;
             if ((img=(ImageOf<PixelMono16>*)depthPort.read(false)))
             {
@@ -376,7 +386,7 @@ bool KinectWrapperClient::getDepthAndPlayers(ImageOf<PixelMono16> &depthIm, Matr
     {
         if (info==KINECT_TAGS_ALL_INFO || info==KINECT_TAGS_DEPTH_RGB_PLAYERS || info==KINECT_TAGS_DEPTH_PLAYERS)
         {
-            players.resize(KINECT_TAGS_DEPTH_HEIGHT,KINECT_TAGS_DEPTH_WIDTH);
+            players.resize(depth_height,depth_width);
             ImageOf<PixelMono16>* img;
             if ((img=(ImageOf<PixelMono16>*)depthPort.read(false)))
             {
@@ -399,7 +409,7 @@ bool KinectWrapperClient::getDepthAndPlayers(ImageOf<PixelMono16> &depthIm, Matr
                     players(m,n)=p;
                     n++;
                 }
-                cvSetData(depthCVPl,bufPl,KINECT_TAGS_DEPTH_WIDTH*2);
+                cvSetData(depthCVPl,bufPl,depth_width*2);
                 depthIm.wrapIplImage(depthCVPl);
                 if (timestamp!=NULL)
                     timestamp=&timestampD;
@@ -428,7 +438,7 @@ bool KinectWrapperClient::getDepthAndPlayers(ImageOf<PixelFloat> &depthIm, Matri
     {
         if (info==KINECT_TAGS_ALL_INFO || info==KINECT_TAGS_DEPTH_RGB_PLAYERS || info==KINECT_TAGS_DEPTH_PLAYERS)
         {
-            players.resize(KINECT_TAGS_DEPTH_HEIGHT,KINECT_TAGS_DEPTH_WIDTH);
+            players.resize(depth_height,depth_width);
             ImageOf<PixelMono16>* img;
             if ((img=(ImageOf<PixelMono16>*)depthPort.read(false)))
             {
@@ -452,7 +462,7 @@ bool KinectWrapperClient::getDepthAndPlayers(ImageOf<PixelFloat> &depthIm, Matri
                     players(m,n)=p;
                     n++;
                 }
-                cvSetData(depthFCVPl,bufFPl,KINECT_TAGS_DEPTH_WIDTH*4);
+                cvSetData(depthFCVPl,bufFPl,depth_width*4);
                 depthIm.wrapIplImage(depthFCVPl);
                 if (timestamp!=NULL)
                     timestamp=&timestampD;
@@ -560,8 +570,8 @@ bool KinectWrapperClient::getInfo(Property &opt)
         opt.put("info",info.c_str());
         opt.put("img_width",img_width);
         opt.put("img_height",img_height);
-        opt.put("depth_width",KINECT_TAGS_DEPTH_WIDTH);
-        opt.put("depth_height",KINECT_TAGS_DEPTH_HEIGHT);
+        opt.put("depth_width",depth_width);
+        opt.put("depth_height",depth_height);
         opt.put("seated_mode",(seatedMode?"on":"off"));
         return true;
     }
@@ -660,10 +670,10 @@ Player KinectWrapperClient::managePlayerRequest(Bottle* skeleton, int playerId)
 /************************************************************************/
 void KinectWrapperClient::getPlayersImage(const yarp::sig::Matrix &players, yarp::sig::ImageOf<yarp::sig::PixelBgr> &image)
 {
-    image.resize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT);
-    for (int i=0; i<KINECT_TAGS_DEPTH_WIDTH; i++)
+    image.resize(depth_width,depth_height);
+    for (int i=0; i<depth_width; i++)
     {
-        for (int j=0; j<KINECT_TAGS_DEPTH_HEIGHT; j++)
+        for (int j=0; j<depth_height; j++)
         {
             if (players(j,i)==1)
                 cvSet2D(playersImage,j,i,cvScalar(255,0,0,0));
@@ -687,7 +697,7 @@ void KinectWrapperClient::getPlayersImage(const yarp::sig::Matrix &players, yarp
 /************************************************************************/
 void KinectWrapperClient::getSkeletonImage(const std::deque<Player> &players, yarp::sig::ImageOf<yarp::sig::PixelBgr> &image)
 {
-    image.resize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT);
+    image.resize(depth_width,depth_height);
     cvZero(skeletonImage);
     for (unsigned int i=0; i<players.size(); i++)
     {
@@ -749,7 +759,7 @@ void KinectWrapperClient::getSkeletonImage(const std::deque<Player> &players, ya
 /************************************************************************/
 void KinectWrapperClient::getSkeletonImage(const Player &player, yarp::sig::ImageOf<yarp::sig::PixelBgr> &image)
 {
-    image.resize(KINECT_TAGS_DEPTH_WIDTH,KINECT_TAGS_DEPTH_HEIGHT);
+    image.resize(depth_width,depth_height);
     cvZero(skeletonImage);
     Skeleton jointsMap=player.skeleton;
     Skeleton::iterator iterator;

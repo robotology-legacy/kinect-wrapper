@@ -36,10 +36,10 @@ namespace kinectWrapper
 class KinectWrapperClient : public KinectWrapper
 {
 protected:
-    unsigned short buf[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
-    unsigned short bufPl[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
-    float bufF[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
-    float bufFPl[KINECT_TAGS_DEPTH_WIDTH*KINECT_TAGS_DEPTH_HEIGHT];
+    unsigned short* buf;
+    unsigned short* bufPl;
+    float* bufF;
+    float* bufFPl;
     bool opening;
     bool init;
     bool noRpc;
@@ -48,6 +48,8 @@ protected:
     int verbosity;
     int img_width;
     int img_height;
+    int depth_width;
+    int depth_height;
 
     std::string remote;
     std::string local;

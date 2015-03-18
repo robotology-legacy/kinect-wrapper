@@ -43,11 +43,12 @@ private:
     std::string info;
     int img_height;
     int img_width;
-    int def_image_height;
-    int def_image_width;
-    int def_depth_width;
-    int def_depth_height;
-    int device;
+    int img_height_sensor;
+    int img_width_sensor;
+    int depth_width;
+    int depth_height;
+    int depth_width_sensor;
+    int depth_height_sensor;
 
     IplImage* rgb_big;
     IplImage* depthTmp;

@@ -43,6 +43,12 @@ from a kinect device.
 --img_height \e img_height
 - height of the rgb image to send.
 
+--depth_width \e depth_width
+- width of the depth image to send.
+
+--depth_height \e depth_height
+- height of the depth image to send.
+
 --seatedMode \e seatedMode
 - if put inside the options, the kinect device will be opened in seated mode (only if the driver is SDK).
 
@@ -82,6 +88,8 @@ public:
         string name=rf.check("name",Value("kinectServer")).asString().c_str();
         int img_width=rf.check("img_width",Value(320)).asInt();
         int img_height=rf.check("img_height",Value(240)).asInt();
+        int depth_width=rf.check("depth_width",Value(320)).asInt();
+        int depth_height=rf.check("depth_height",Value(240)).asInt();
         string device=rf.check("device",Value("kinect")).asString().c_str();
 
         Property options;
@@ -90,6 +98,8 @@ public:
         options.put("name",name.c_str());
         options.put("img_width",img_width);
         options.put("img_height",img_height);
+        options.put("depth_width",depth_width);
+        options.put("depth_height",depth_height);
         options.put("device",device.c_str());
         if (rf.check("remap"))
             options.put("remap","true");

@@ -51,6 +51,8 @@ protected:
     int verbosity;
     int img_width;
     int img_height;
+    int depth_width;
+    int depth_height;
     yarp::os::Stamp tsD,tsI,tsS;
     double timestampD,timestampI,timestampS;
     std::string name;

@@ -17,13 +17,8 @@
 #ifndef __KINECT_TAGS_H__
 #define __KINECT_TAGS_H__
 
-#define KINECT_TAGS_DEPTH_WIDTH             320
-#define KINECT_TAGS_DEPTH_HEIGHT            240
-
 #define KINECT_TAGS_N_JOINTS                20
 #define KINECT_TAGS_MAX_USERS               15
-#define KINECT_TAGS_DEVICE_KINECT           0
-#define KINECT_TAGS_DEVICE_XTION            1
 
 #define KINECT_TAGS_ALL_INFO                "all_info"
 #define KINECT_TAGS_DEPTH                   "depth"

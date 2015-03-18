@@ -19,6 +19,9 @@
 #include <yarp/os/Network.h>
 #include <kinectWrapper/kinectDriverSDK.h>
 
+#define KINECT_TAGS_DEPTH_WIDTH             320
+#define KINECT_TAGS_DEPTH_HEIGHT            240
+
 using namespace std;
 using namespace yarp::os;
 using namespace yarp::sig;
