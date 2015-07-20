@@ -232,7 +232,7 @@ int main(int argc, char *argv[])
     if (!yarp.checkNetwork())
     {
         fprintf(stdout, "Yarp network not available\n");
-        return -1;
+        return 1;
     }
 
     ResourceFinder rf;
