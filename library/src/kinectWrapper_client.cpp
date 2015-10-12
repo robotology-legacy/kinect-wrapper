@@ -283,7 +283,7 @@ bool KinectWrapperClient::getDepth(ImageOf<PixelFloat> &depthIm, double *timesta
             {
                 //We take only the first 13 bits, that contain the depth value in mm
                 unsigned short realDepth = (pBuff[i]&0xFFF8);
-                float scale=((1.0*realDepth/0xFFF8));
+                float scale=(float)((1.0*realDepth/0xFFF8));
                 bufF[i]=scale;
             }
             cvSetData(depthFCV,bufF,depth_width*4);
@@ -456,7 +456,7 @@ bool KinectWrapperClient::getDepthAndPlayers(ImageOf<PixelFloat> &depthIm, Matri
                 for (int i=0; i<img->width()*img->height(); i++)
                 {
                     unsigned short realDepth = (pBuff[i]&0xFFF8);
-                    float scale=((1.0*realDepth/0xFFF8));
+                    float scale=(float)((1.0*realDepth/0xFFF8));
                     bufFPl[i]=scale;
                     int p=(pBuff[i]&0x0007);
                     if (n==img->width())
