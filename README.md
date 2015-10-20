@@ -8,8 +8,10 @@ A C++ [YARP](https://github.com/robotology/yarp) library that wraps around Kinec
 ##### Dependencies
 - [YARP](https://github.com/robotology/yarp)
 - [icub-contrib-common](https://github.com/robotology/icub-contrib-common)
-- [Kinect SDK](http://www.microsoft.com/en-us/kinectforwindowsdev/start.aspx) and/or [OpenNI 1.0](https://github.com/OpenNI/OpenNI)
+- [Kinect SDK](http://www.microsoft.com/en-us/kinectforwindowsdev/start.aspx) and/or [OpenNI 1.X](https://github.com/OpenNI/OpenNI tested with v1.5.2.23 unstable)
 - [OpenCV](http://opencv.org/downloads.html)
+- [NITE 1.X](http://www.mira-project.org/downloads/3rdparty/ tested with v1.5.2.21)
+- [SensorKinect](https://github.com/avin2/SensorKinect/releases tested with v0.92-5.1.2.1)
 
 ##### Cmaking the project
 At cmake time, user can select which library to use through the cmake variable `USE_KinectSDK`, which can be `ON` (_Kinect SDK_) or `OFF` (_OpenNI_).
