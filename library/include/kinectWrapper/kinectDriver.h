@@ -28,12 +28,12 @@
 #ifndef __KINECT_DRIVER_H__
 #define __KINECT_DRIVER_H__
 
+#include <opencv2/opencv.hpp>
+
 #include <yarp/os/Property.h>
 #include <yarp/sig/Vector.h>
 #include <yarp/sig/Image.h>
-#include <cv.h>
-#include <highgui.h>
-#include <cxcore.h>
+
 #include <kinectWrapper/kinectTags.h>
 
 namespace kinectWrapper
