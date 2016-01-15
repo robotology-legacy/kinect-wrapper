@@ -8,7 +8,7 @@ A C++ [YARP](https://github.com/robotology/yarp) library that wraps around Kinec
 ##### Dependencies
 - [YARP](https://github.com/robotology/yarp)
 - [icub-contrib-common](https://github.com/robotology/icub-contrib-common)
-- [Kinect SDK](http://www.microsoft.com/en-us/kinectforwindowsdev/start.aspx) and/or [OpenNI 1.X](https://github.com/OpenNI/OpenNI) (tested with v1.5.2.23 unstable or v1.5.4.0-7 from Ubuntu 14.04 repositories)
+- [Kinect SDK](https://www.microsoft.com/en-us/download/details.aspx?id=36996) and/or [OpenNI 1.X](https://github.com/OpenNI/OpenNI) (tested with v1.5.2.23 unstable or v1.5.4.0-7 from Ubuntu 14.04 repositories)
 - [OpenCV](http://opencv.org/downloads.html)
 - [NITE 1.X](http://www.mira-project.org/downloads/3rdparty/) (tested with v1.5.2.21)
 - [SensorKinect](https://github.com/avin2/SensorKinect/releases) (tested with v0.92-5.1.2.1)
