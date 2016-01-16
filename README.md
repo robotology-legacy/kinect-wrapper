@@ -16,6 +16,8 @@ A C++ [YARP](https://github.com/robotology/yarp) library that wraps around Kinec
 ##### Cmaking the project
 At cmake time, user can select which library to use through the cmake variable `USE_KinectSDK`, which can be `ON` (_Kinect SDK_) or `OFF` (_OpenNI_).
 
+If you intend to rely on `Kinect SDK`, then it is required to setup the environment variable `KINECTSDK_DIR` pointing to the installed SDK, e.g. "C:\Program Files\Microsoft SDKs\Kinect\vx.y" (don't forget the double quotes).
+
 The project is composed of a library that the user can link against to get access to the client side of the kinectWrapper and a binary implementing the server side. For further details refer to the architecture hereinafter.
 
 ## Architecture
