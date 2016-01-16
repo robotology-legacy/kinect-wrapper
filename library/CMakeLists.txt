@@ -28,29 +28,30 @@ include_directories(${PROJECT_SOURCE_DIR}/include
                     ${YARP_INCLUDE_DIRS}
                     ${OpenCV_INCLUDE_DIRS}) 
 
-set(headers include/kinectWrapper/kinectTags.h
-            include/kinectWrapper/kinectWrapper.h
-            include/kinectWrapper/kinectWrapper_client.h)
+set(headers_pub include/kinectWrapper/kinectTags.h
+                include/kinectWrapper/kinectWrapper.h
+                include/kinectWrapper/kinectWrapper_client.h)
 set(sources src/kinectWrapper_client.cpp)
 
 if (USE_KinectSDK AND KinectSDK_FOUND)
    include_directories(${KinectSDK_INCLUDE_DIRS})
    LINK_DIRECTORIES(${KinectSDK_LIB_DIR})
    add_definitions(-D__USE_SDK__)
-   list(APPEND headers include/kinectWrapper/kinectDriver.h
-                       include/kinectWrapper/kinectDriverSDK.h
-                       include/kinectWrapper/kinectWrapper_server.h)
+   set(headers_priv include/kinectWrapper/kinectDriver.h
+                    include/kinectWrapper/kinectDriverSDK.h
+                    include/kinectWrapper/kinectWrapper_server.h)
    list(APPEND sources src/kinectDriverSDK.cpp
                        src/kinectWrapper_server.cpp)
 elseif ((NOT USE_KinectSDK) AND OpenNI_FOUND)
    include_directories(${OpenNI_INCLUDE_DIRS})
    add_definitions(-D__USE_OPENNI__)
-   list(APPEND headers include/kinectWrapper/kinectDriver.h
-                       include/kinectWrapper/kinectDriverOpenNI.h
-                       include/kinectWrapper/kinectWrapper_server.h)
+   set(headers_priv include/kinectWrapper/kinectDriver.h
+                    include/kinectWrapper/kinectDriverOpenNI.h
+                    include/kinectWrapper/kinectWrapper_server.h)
    list(APPEND sources src/kinectDriverOpenNI.cpp
                        src/kinectWrapper_server.cpp)
 endif ()
+set(headers {headers_pub} {headers_priv})
 
 source_group("Header Files" FILES ${headers})
 source_group("Source Files" FILES ${sources})
@@ -69,20 +70,20 @@ if (USE_KinectSDK AND KinectSDK_FOUND)
                                               EXTERNAL_INCLUDE_DIRS ${YARP_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS} ${KinectSDK_INCLUDE_DIRS}
                                               DESTINATION include/kinectWrapper
                                               DEPENDS ${YARP_LIBRARIES} ${OpenCV_LIBRARIES} ${KinectSDK_LIBRARIES}
-                                              FILES ${headers})
+                                              FILES ${headers_pub})
 elseif ((NOT USE_KinectSDK) AND OpenNI_FOUND)
     target_link_libraries(${PROJECTNAME} ${OpenNI_LIBRARIES})
     icubcontrib_export_library(${PROJECTNAME} INTERNAL_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include
                                               EXTERNAL_INCLUDE_DIRS ${YARP_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS} ${OpenNI_INCLUDE_DIR}
                                               DESTINATION include/kinectWrapper
                                               DEPENDS ${YARP_LIBRARIES} ${OpenCV_LIBRARIES} ${OpenNI_LIBRARIES}
-                                              FILES ${headers})
-else()
-  icubcontrib_export_library(${PROJECTNAME} INTERNAL_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include
+                                              FILES ${headers_pub})
+else ()
+    icubcontrib_export_library(${PROJECTNAME} INTERNAL_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include
                                               EXTERNAL_INCLUDE_DIRS ${YARP_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS}
                                               DESTINATION include/kinectWrapper
                                               DEPENDS ${YARP_LIBRARIES} ${OpenCV_LIBRARIES}
-                                              FILES ${headers})
+                                              FILES ${headers_pub})
 endif ()
 
 
