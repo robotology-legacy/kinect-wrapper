@@ -66,13 +66,13 @@ endif ()
 
 target_link_libraries(${PROJECTNAME} ${YARP_LIBRARIES} ${OpenCV_LIBRARIES})
 
-if (USE_KinectSDK AND KinectSDK_FOUND)
+if (USE_KinectSDK AND KinectSDK_FOUND AND (NOT BUILD_CLIENT_ONLY))
     target_link_libraries(${PROJECTNAME} ${KinectSDK_LIBRARIES})
     icubcontrib_export_library(${PROJECTNAME} INTERNAL_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include
                                               EXTERNAL_INCLUDE_DIRS ${YARP_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS}
                                               DESTINATION include/kinectWrapper
                                               FILES ${headers_pub})
-elseif ((NOT USE_KinectSDK) AND OpenNI_FOUND)
+elseif ((NOT USE_KinectSDK) AND OpenNI_FOUND AND (NOT BUILD_CLIENT_ONLY))
     target_link_libraries(${PROJECTNAME} ${OpenNI_LIBRARIES})
     icubcontrib_export_library(${PROJECTNAME} INTERNAL_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include
                                               EXTERNAL_INCLUDE_DIRS ${YARP_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS}
