@@ -8,10 +8,18 @@ set(PROJECTNAME kinectWrapper)
 project(${PROJECTNAME})
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/library/cmake)
 
+option(BUILD_CLIENT_ONLY "" FALSE)
+
 find_package(YARP REQUIRED)
 find_package(ICUBcontrib REQUIRED)
-find_package(KinectSDK)
-find_package(OpenNI)
+
+if(BUILD_CLIENT_ONLY)
+  message("Only the client will be built.")
+else()  
+  find_package(KinectSDK)
+  find_package(OpenNI)
+endif()
+
 list(APPEND CMAKE_MODULE_PATH ${YARP_MODULE_PATH}
                               ${ICUBCONTRIB_MODULE_PATH})
 
@@ -29,3 +37,4 @@ add_subdirectory(modules)
 
 icubcontrib_finalize_export(${PROJECTNAME})
 icubcontrib_add_uninstall_target()
+
