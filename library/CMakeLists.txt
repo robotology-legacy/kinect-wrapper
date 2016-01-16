@@ -51,7 +51,7 @@ elseif ((NOT USE_KinectSDK) AND OpenNI_FOUND)
    list(APPEND sources src/kinectDriverOpenNI.cpp
                        src/kinectWrapper_server.cpp)
 endif ()
-set(headers {headers_pub} {headers_priv})
+set(headers ${headers_pub} ${headers_priv})
 
 source_group("Header Files" FILES ${headers})
 source_group("Source Files" FILES ${sources})
