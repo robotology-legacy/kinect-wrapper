@@ -103,7 +103,7 @@ public:
     * \b name <string>: example (name kinectServer), specifies the
     *    name of the server to be launched.
     *
-    * \b period <int>: example (period 20), specifies the period
+    * \b period <int>: example (period 30), specifies the period
     *    given in [ms] for the streaming over yarp ports of data
     *    retrieved from the kinect device.
     *

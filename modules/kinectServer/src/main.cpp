@@ -84,7 +84,7 @@ public:
     bool configure(ResourceFinder &rf)
     {
         int verbosity=rf.check("verbosity",Value(0)).asInt();
-        int period=rf.check("period",Value(20)).asInt();
+        int period=rf.check("period",Value(30)).asInt();
         string name=rf.check("name",Value("kinectServer")).asString().c_str();
         int img_width=rf.check("img_width",Value(320)).asInt();
         int img_height=rf.check("img_height",Value(240)).asInt();

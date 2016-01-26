@@ -28,7 +28,7 @@ using namespace yarp::sig;
 using namespace kinectWrapper;
 
 /************************************************************************/
-KinectWrapperServer::KinectWrapperServer() : RateThread(20)
+KinectWrapperServer::KinectWrapperServer() : RateThread(30)
 {
     opening=false;
     name="";
@@ -122,7 +122,7 @@ bool KinectWrapperServer::open(const Property &options)
 
     verbosity=opt.check("verbosity",Value(0)).asInt();
     name=opt.check("name",Value("kinectServer")).asString().c_str();
-    period=opt.check("period",Value(20)).asInt();
+    period=opt.check("period",Value(30)).asInt();
     info=opt.check("info",Value(KINECT_TAGS_ALL_INFO)).asString().c_str();
     seatedMode=opt.check("seatedMode");
     img_width=opt.check("img_width",Value(320)).asInt();
