@@ -50,7 +50,7 @@ from a kinect device.
 - height of the depth image to send.
 
 --seatedMode
-- if put inside the options, the kinect device will be opened in seated mode (only if the driver is SDK).
+- if put inside the options, the kinect device will be opened in seated mode.
 
 --remap
 - if OpenNI, it provides depth aligned with rgb
